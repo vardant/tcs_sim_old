@@ -53,7 +53,7 @@
 
   <position name="jf_shift" x="0" y="0" z="z_jf+dz_jf/2-poleZ/2"/>
 
-  <rotation name="zflip" x="pi" y="0" z="0" />
+  <rotation name="zflip" x="PI" y="0" z="0" />
 
   <position name="center" x="0" y="0" z="0"/>
   <rotation name="identity" x="0" y="0" z="0"/>
@@ -199,7 +199,6 @@
    <volume name="PoleAssembly">
      <materialref ref="Vaccuum"/>
      <solidref ref="PoleAssemblyTube"/>
-     <auxiliary auxtype="Color" auxvalue="trans" />
 
      <physvol>
        <volumeref ref="PoleVol"/>
@@ -225,6 +224,7 @@
        <rotationref ref="identity"/>
      </physvol> 
 
+     <auxiliary auxtype="Color" auxvalue="trans" />
    </volume>
 
    <volume name="MagnetAssembly">

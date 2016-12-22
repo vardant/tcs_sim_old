@@ -159,23 +159,31 @@ void TCSDetectorConstruction::ConstructSDandField()
 {
   // Sensitive detectors
 
-  TCSCalorimeterSD* tcsSD = new TCSCalorimeterSD("CalorimeterSD",
-						 "CalorimeterHitsCollection");
+  //Avoid double initialization.
+  static G4ThreadLocal G4bool initialized = false;
+  if ( ! initialized ) {
 
-  // Register the messenger for deleting
-  //  G4AutoDelete::Register(tcsSD);
-  
-  //  SetSensitiveDetector("CalorimeterAssembly", tcsSD, true);
-  SetSensitiveDetector("Block", tcsSD, true);
-  SetSensitiveDetector("caloWorld", tcsSD, true);
+    TCSCalorimeterSD* tcsSD = new TCSCalorimeterSD("CalorimeterSD",
+						   "CalorimeterHitsCollection");
 
-  // Create global magnetic field messenger.
-  // Uniform magnetic field is then created automatically if
-  // the field value is not zero.
-  //  G4ThreeVector fieldValue = G4ThreeVector();
-  //fMagFieldMessenger = new G4GlobalMagFieldMessenger(fieldValue);
-  //fMagFieldMessenger->SetVerboseLevel(1);
+    // Register the messenger for deleting
+    //  G4AutoDelete::Register(tcsSD);
   
-  // Register the field messenger for deleting
-  //G4AutoDelete::Register(fMagFieldMessenger);
+    //  SetSensitiveDetector("CalorimeterAssembly", tcsSD, true);
+    SetSensitiveDetector("Block", tcsSD, true);
+    SetSensitiveDetector("caloWorld", tcsSD, true);
+
+    // Create global magnetic field messenger.
+    // Uniform magnetic field is then created automatically if
+    // the field value is not zero.
+    //  G4ThreeVector fieldValue = G4ThreeVector();
+    //fMagFieldMessenger = new G4GlobalMagFieldMessenger(fieldValue);
+    //fMagFieldMessenger->SetVerboseLevel(1);
+  
+    // Register the field messenger for deleting
+    //G4AutoDelete::Register(fMagFieldMessenger);
+
+    initialized=true;
+  }
+
 }
