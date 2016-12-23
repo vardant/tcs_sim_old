@@ -10,11 +10,11 @@
   <constant name="TWOPI" value="2.*pi"/>
 
   <!-- Guesses, correct later on -->
-  <quantity name="thick_entr_cap" type="length" value="0.0125" unit="cm"/>
-  <quantity name="thick_exit_cap" type="length" value="0.0125" unit="cm"/>
+  <!-- quantity name="thick_entr_cap" type="length" value="0.0125" unit="cm"/-->
+  <!-- quantity name="thick_exit_cap" type="length" value="0.0125" unit="cm"/-->
   <!-- test -->
-  <!-- quantity name="thick_entr_cap" type="length" value="0.25" unit="cm"/ -->
-  <!-- quantity name="thick_exit_cap" type="length" value="0.50" unit="cm"/ -->
+  <quantity name="thick_entr_cap" type="length" value="0.0000001" unit="mm"/>
+  <quantity name="thick_exit_cap" type="length" value="0.0000001" unit="mm"/>
 
   <quantity name="thick_cell_wall" type="length" value="0.06858" unit="cm"/>
   <!-- test -->

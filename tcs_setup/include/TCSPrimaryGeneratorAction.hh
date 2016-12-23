@@ -64,7 +64,7 @@ private:
   string fParticleName;
   G4double fEnergy;
   G4double fX0, fY0, fZ0;          // beam position
-  G4double fDX, fDY;               // beam sizes
+  G4double fDX, fDY;               // beam dimensions
 
 };
 

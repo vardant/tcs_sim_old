@@ -66,7 +66,7 @@ TCSPrimaryGeneratorAction::TCSPrimaryGeneratorAction() :
   fDX *= mm;
   fDY *= mm;
 
-  G4cout << "TCSPrimaryGeneratorAction: default beam parameters:" << G4endl;
+  G4cout << "TCSPrimaryGeneratorAction: Initial beam definition:" << G4endl;
   G4cout << "  Particle " << fParticleName << G4endl;
   G4cout << "  Energy = " << fEnergy/GeV << " GeV" << G4endl;
   G4cout << "  Position: (" << fX0/cm << ", " << fY0/cm << ", " << fZ0/cm
@@ -99,11 +99,16 @@ void TCSPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   // This function is called at the begining of each event.
   // We want to place the particle gun just before the Radiator
 
-  G4double x = fDX*(G4UniformRand()-.5);
-  G4double y = fDY*(G4UniformRand()-.5);
+  G4double x = 0.;
+  G4double y = 0.;
 
-  x += fX0;
-  y += fY0;
+  do {
+    x = G4UniformRand()-.5;
+    y = G4UniformRand()-.5;
+  } while (x*x+y*y > .25);
+
+  x = x*fDX + fX0;
+  y = y*fDY + fY0;
 
   fParticleGun->SetParticlePosition(G4ThreeVector(x,y,fZ0));
   fParticleGun->GeneratePrimaryVertex(anEvent);
