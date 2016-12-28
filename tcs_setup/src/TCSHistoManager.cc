@@ -36,26 +36,29 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-TCSHistoManager::TCSHistoManager() : fRootFile(0), fTree(0)
+TCSHistoManager::TCSHistoManager() : fRootFile(0), fCaloTree(0), fHodoXTree(0)
 {
   fRootFileName="tcs_setup.root";
   // histogram(s)
   for (G4int k=0; k<MaxHisto; k++) fHisto[k] = 0;
     
-  // Tree
-  fTree = 0;
+  // Trees
+  fCaloTree = 0;
+  fHodoXTree = 0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-TCSHistoManager::TCSHistoManager(char *aname) : fRootFile(0), fTree(0)
+TCSHistoManager::TCSHistoManager(char *aname) : fRootFile(0),
+						fCaloTree(0), fHodoXTree(0)
 {
   fRootFileName=aname;  
   // histogram(s)
   for (G4int k=0; k<MaxHisto; k++) fHisto[k] = 0;
     
-  // Tree
-  fTree = 0;
+  // Trees
+  fCaloTree = 0;
+  fHodoXTree = 0;
 
 }
 
@@ -70,8 +73,8 @@ TCSHistoManager::~TCSHistoManager()
 
 void TCSHistoManager::book()
 { 
- // Creating a tree container to handle histograms and Trees.
- // This tree is associated to an output file.
+ // Creating tree containers to handle histograms and Trees.
+ // These trees are associated to an output file.
  //
  fRootFile = new TFile(fRootFileName,"RECREATE");
  if(!fRootFile) {
@@ -84,12 +87,19 @@ void TCSHistoManager::book()
  fHisto[1] = new TH1D("h1", "Total Edep(MeV)", 100, 0., 5000.);
  if (!fHisto[1]) G4cout << "\n can't create histo 1" << G4endl;
 
- fTree = new TTree("calo", "TCS Calorimeters' per event hit collections");
- fTree->Branch("detcont", &fDetCont);
- fTree->Branch("colcont", &fColCont);
- fTree->Branch("rowcont", &fRowCont);
- fTree->Branch("edepcont", &fEdepCont);
+ fCaloTree = new TTree("calo", "TCS Calorimeters' per event hit collections");
+ fCaloTree->Branch("detcont", &(fCaloHitCont.Det));
+ fCaloTree->Branch("colcont", &(fCaloHitCont.Col));
+ fCaloTree->Branch("rowcont", &(fCaloHitCont.Row));
+ fCaloTree->Branch("edepcont", &(fCaloHitCont.Edep));
+
+ fHodoXTree = new TTree("hodox", "TCS X hodoscopes' per event hit collections");
+ fHodoXTree->Branch("detcont", &(fHodoXHitCont.Det));
+ fHodoXTree->Branch("chancont", &(fHodoXHitCont.Chan));
+ fHodoXTree->Branch("edepcont", &(fHodoXHitCont.Edep));
+
  G4cout << "\n----> Root file is opened in " << fRootFileName << G4endl;
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -130,13 +140,18 @@ void TCSHistoManager::Normalize(G4int ih, G4double fac)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void TCSHistoManager::FillTree()
+void TCSHistoManager::FillTrees()
 {
-  //  if (fTree && fHitList.size() != 0) {
-  if (fTree) {
+  if (fCaloTree) {
     //G4cout <<"Filling Tree right now! fHitList size = " << fHitList.size()
     //<< "\n";
-    fTree->Fill();
+    fCaloTree->Fill();
+  }
+
+  if (fHodoXTree) {
+    //G4cout <<"Filling Tree right now! fHitList size = " << fHitList.size()
+    //<< "\n";
+    fHodoXTree->Fill();
   }
 
 }
@@ -147,11 +162,12 @@ void TCSHistoManager::AddHit(int det, uint col, uint row, double edep) {
 
   bool found = false;
 
-  vector<uint>::iterator ic = fColCont.begin();
-  vector<uint>::iterator ir = fRowCont.begin();
-  vector<double>::iterator ie = fEdepCont.begin();
+  vector<uint>::iterator ic = fCaloHitCont.Col.begin();
+  vector<uint>::iterator ir = fCaloHitCont.Row.begin();
+  vector<double>::iterator ie = fCaloHitCont.Edep.begin();
 
-  for (vector<int>::iterator id=fDetCont.begin(); id != fDetCont.end(); id++) {
+  for (vector<int>::iterator id=fCaloHitCont.Det.begin();
+       id != fCaloHitCont.Det.end(); id++) {
 
     if (*id == det && *ic == col && *ir == row) {
       //      cout << "AddHit: *ie = " << *ie << "  edep = " << edep << endl;
@@ -166,10 +182,44 @@ void TCSHistoManager::AddHit(int det, uint col, uint row, double edep) {
   }
 
   if (!found) {
-    fDetCont.push_back(det);
-    fColCont.push_back(col);
-    fRowCont.push_back(row);
-    fEdepCont.push_back(edep);
+    fCaloHitCont.Det.push_back(det);
+    fCaloHitCont.Col.push_back(col);
+    fCaloHitCont.Row.push_back(row);
+    fCaloHitCont.Edep.push_back(edep);
+    //cout << "Pushed back cal hit " << det << " " << col << " " << row << " "
+    //<< edep << endl;
+  }
+
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void TCSHistoManager::AddHit(int det, uint chan, double edep) {
+
+  bool found = false;
+
+  vector<uint>::iterator ic = fHodoXHitCont.Chan.begin();
+  vector<double>::iterator ie = fHodoXHitCont.Edep.begin();
+
+  for (vector<int>::iterator id=fHodoXHitCont.Det.begin();
+       id != fHodoXHitCont.Det.end(); id++) {
+
+    if (*id == det && *ic == chan) {
+      //      cout << "AddHit: *ie = " << *ie << "  edep = " << edep << endl;
+      *ie += edep;
+      //      cout << "AddHit: *ie = " << *ie << endl;
+      //      getchar();
+      found = true;
+      break;
+    }
+
+    ic++; ie++;
+  }
+
+  if (!found) {
+    fHodoXHitCont.Det.push_back(det);
+    fHodoXHitCont.Chan.push_back(chan);
+    fHodoXHitCont.Edep.push_back(edep);
   }
 
 }

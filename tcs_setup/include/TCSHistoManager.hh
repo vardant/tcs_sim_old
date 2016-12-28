@@ -56,21 +56,41 @@ public:
   void Normalize(G4int id, G4double fac);    
 
   void AddHit(int det, uint col, uint row, double edep);
+  void AddHit(int det, uint chan, double edep);
 
-  bool CheckCont() {
-    uint sz = fDetCont.size();
-    return (fColCont.size() != sz || fRowCont.size() != sz ||
-	    fEdepCont.size() != sz ? false : true);
+  bool CheckCaloHitCont() {
+    uint sz = fCaloHitCont.Det.size();
+    return (fCaloHitCont.Col.size() != sz || fCaloHitCont.Row.size() != sz ||
+	    fCaloHitCont.Edep.size() != sz ? false : true);
   }
 
-  void Reset() {
-    fDetCont.clear();
-    fColCont.clear();
-    fRowCont.clear();
-    fEdepCont.clear();
+  //Generalize later on.
+  bool CheckHodoXHitCont() {
+    uint sz = fHodoXHitCont.Det.size();
+    return (fHodoXHitCont.Chan.size() != sz || fHodoXHitCont.Edep.size() != sz
+	    ? false : true);
+  }
+
+  void ResetCalo() {
+    fCaloHitCont.Det.clear();
+    fCaloHitCont.Col.clear();
+    fCaloHitCont.Row.clear();
+    fCaloHitCont.Edep.clear();
   };
 
-  void FillTree();
+  //Generalize later on.
+  void ResetHodoX() {
+    fHodoXHitCont.Det.clear();
+    fHodoXHitCont.Chan.clear();
+    fHodoXHitCont.Edep.clear();
+  };
+
+  void Reset() {
+    ResetCalo();
+    ResetHodoX();
+  };
+
+  void FillTrees();
 
   void PrintStatistic();
         
@@ -79,12 +99,21 @@ private:
   char*    fRootFileName;
   TFile*   fRootFile;
   TH1D*    fHisto[MaxHisto];            
-  TTree*   fTree;
+  TTree*   fCaloTree;
+  TTree*   fHodoXTree;
 
-  std::vector<int> fDetCont;
-  std::vector<uint> fColCont;
-  std::vector<uint> fRowCont;
-  std::vector<double> fEdepCont;
+  struct CaloHitContainer {
+    vector<int> Det;
+    vector<uint> Col;
+    vector<uint> Row;
+    vector<double> Edep;
+  } fCaloHitCont;
+
+  struct HodoHitContainer {
+    vector<int> Det;
+    vector<uint> Chan;
+    vector<double> Edep;
+  } fHodoXHitCont;
 
 };
 

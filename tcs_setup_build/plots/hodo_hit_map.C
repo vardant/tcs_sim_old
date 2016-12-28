@@ -5,7 +5,7 @@
 #include "TChain.h"
 #include "TCanvas.h"
 #include "TFrame.h"
-#include "TH2F.h"
+#include "TH1F.h"
 #include <TStyle.h>
 #include <TGaxis.h>
 #include <iostream>
@@ -15,28 +15,26 @@ void ReverseXAxis (TH1 *h);
 
 using namespace std;
 
-#define NCOL 50
-#define NROW 31
+#define NCHAN 27
 
 #ifdef __MAKECINT__
 #pragma link C++ class vector<float>+;
 #endif
 
-void hit_map(string dir, string phases, int maxfiles, double e_thr,
-	     string comment) {
+void hodo_hit_map(string hodo_tree, string dir, string phases, int maxfiles,
+		  double e_thr, string comment) {
 
   string hTitle=Form("Total hit rate [MHz/uA] (E >%4.0f MeV, ",e_thr) +
     comment + ")";
 
-  TH2D* hTotHitPos = new TH2D("hh",hTitle.c_str(),
-			      NCOL+1,-0.5,NCOL+0.5,NROW+1,-0.5,NROW+0.5);
-  TH2D *hTotHitNeg = (TH2D*)hTotHitPos->Clone("hTotHitNeg");
+  TH1D* hTotHitPos = new TH1D("hh",hTitle.c_str(), NCHAN+1,-0.5,NCHAN+0.5);
+  TH1D *hTotHitNeg = (TH1D*)hTotHitPos->Clone("hTotHitNeg");
 
   Int_t nX = hTotHitPos->GetNbinsX();
   
   //Chain root files
 
-  TChain ch("calo");   //a chain to process Tree "calo"
+  TChain ch(hodo_tree.c_str());   //a chain to process Tree hodo_tree
   istringstream iss;
   iss.str(phases);
   string phase;
@@ -55,18 +53,15 @@ void hit_map(string dir, string phases, int maxfiles, double e_thr,
   }
 
   std::vector<int> *det_vec = 0;
-  std::vector<unsigned int> *col_vec = 0;
-  std::vector<unsigned int> *row_vec = 0;
+  std::vector<unsigned int> *chan_vec = 0;
   std::vector<double> *edep_vec = 0;
 
   TBranch *det_br = 0;
-  TBranch *col_br = 0;
-  TBranch *row_br = 0;
+  TBranch *chan_br = 0;
   TBranch *edep_br = 0;
 
   ch.SetBranchAddress("detcont",&det_vec,&det_br);
-  ch.SetBranchAddress("colcont",&col_vec,&col_br);
-  ch.SetBranchAddress("rowcont",&row_vec,&row_br);
+  ch.SetBranchAddress("chancont",&chan_vec,&chan_br);
   ch.SetBranchAddress("edepcont",&edep_vec,&edep_br);
 
   Long64_t nentries = ch.GetEntriesFast();
@@ -78,24 +73,22 @@ void hit_map(string dir, string phases, int maxfiles, double e_thr,
     if (i < 10) cout << "tentry = " << tentry << "  i = " << i << endl;
 
     det_br->GetEntry(tentry);
-    col_br->GetEntry(tentry);
-    row_br->GetEntry(tentry);
+    chan_br->GetEntry(tentry);
     edep_br->GetEntry(tentry);
 
     for (UInt_t j = 0; j < det_vec->size(); ++j) {
  
       int det = det_vec->at(j);
-      unsigned int col = col_vec->at(j);
-      unsigned int row = row_vec->at(j);
+      unsigned int chan = chan_vec->at(j);
       double edep = edep_vec->at(j);
-      //cout << " hit " << j << ": " << det << " " << col << " " << row << " "
+      //cout << " hit " << j << ": " << det << " " << chan << " "
       //	     << edep << endl;
 
       if (edep > e_thr) {
 	if (det > 0)
-	  hTotHitPos->Fill(nX-1-col-1,row+1,1.);
+	  hTotHitPos->Fill(nX-1-chan-1,1.);
 	else
-	  hTotHitNeg->Fill(nX-1-col-1,row+1,1.);   //mirror
+	  hTotHitNeg->Fill(nX-1-chan-1,1.);   //mirror
       }
 
     }
@@ -127,12 +120,12 @@ void hit_map(string dir, string phases, int maxfiles, double e_thr,
    TCanvas *ct = new TCanvas("tothit_map", "Total hit rate [MHz/uA]", 600, 720);
    gPad->Divide(1,2);
    ct->cd(1);
-   hTotHitPos->Draw("colz");
-   ct->SetRightMargin(0.15);
+   hTotHitPos->Draw();
+   //   ct->SetRightMargin(0.15);
    ReverseXAxis(hTotHitPos);
    ct->cd(2);
-   hTotHitNeg->Draw("colz");
-   ct->SetRightMargin(0.15);
+   hTotHitNeg->Draw();
+   //   ct->SetRightMargin(0.15);
    ReverseXAxis(hTotHitNeg);
 
 }

@@ -53,6 +53,7 @@ private:
   TCSHistoManager *fHistoManager;
   G4int fPrintModulo;
   G4int fCalorimeterCollID;
+  G4int fHodoXCollID;
   G4int fEvtNo;
 };
 

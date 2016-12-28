@@ -137,6 +137,18 @@
    </physvol>
 
    <physvol>
+     <file name="tcs_gdmls/trackerY.gdml"/>
+     <positionref ref="trackery_pos_shift"/>
+     <rotationref ref="calo_pos_rot"/>
+   </physvol>
+
+   <physvol>
+     <file name="tcs_gdmls/trackerY.gdml"/>
+     <positionref ref="trackery_neg_shift"/>
+     <rotationref ref="calo_neg_rot"/>
+   </physvol>
+
+   <physvol>
      <file name="tcs_gdmls/trackerX.gdml"/>
      <positionref ref="trackerx_pos_shift"/>
      <rotationref ref="calo_pos_rot"/>

@@ -26,6 +26,7 @@
 
 #include "TCSDetectorConstruction.hh"
 #include "TCSCalorimeterSD.hh"
+#include "TCSHodoXSD.hh"
 
 // **** Magnetic field ******
 // New include files - used for magnetic field
@@ -163,15 +164,22 @@ void TCSDetectorConstruction::ConstructSDandField()
   static G4ThreadLocal G4bool initialized = false;
   if ( ! initialized ) {
 
-    TCSCalorimeterSD* tcsSD = new TCSCalorimeterSD("CalorimeterSD",
+    // Calorimeter SD
+
+    TCSCalorimeterSD* caloSD = new TCSCalorimeterSD("CalorimeterSD",
 						   "CalorimeterHitsCollection");
 
     // Register the messenger for deleting
-    //  G4AutoDelete::Register(tcsSD);
+    //  G4AutoDelete::Register(caloSD);
   
     //  SetSensitiveDetector("CalorimeterAssembly", tcsSD, true);
-    SetSensitiveDetector("Block", tcsSD, true);
-    SetSensitiveDetector("caloWorld", tcsSD, true);
+    SetSensitiveDetector("Block", caloSD, true);
+    SetSensitiveDetector("caloWorld", caloSD, true);
+
+    // Hodoscope SD
+    TCSHodoXSD* hodoxSD = new TCSHodoXSD("HodoscopeXSD", "HodoXHitsCollection");
+    SetSensitiveDetector("Bar", hodoxSD, true);
+    SetSensitiveDetector("hodoXWorld", hodoxSD, true);
 
     // Create global magnetic field messenger.
     // Uniform magnetic field is then created automatically if
