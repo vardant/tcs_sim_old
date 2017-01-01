@@ -54,6 +54,7 @@ private:
   G4int fPrintModulo;
   G4int fCalorimeterCollID;
   G4int fHodoXCollID;
+  G4int fHodoYCollID;
   G4int fEvtNo;
 };
 

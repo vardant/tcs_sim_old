@@ -36,7 +36,8 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-TCSHistoManager::TCSHistoManager() : fRootFile(0), fCaloTree(0), fHodoXTree(0)
+TCSHistoManager::TCSHistoManager() : fRootFile(0), fCaloTree(0), fHodoXTree(0),
+				     fHodoYTree(0)
 {
   fRootFileName="tcs_setup.root";
   // histogram(s)
@@ -45,12 +46,15 @@ TCSHistoManager::TCSHistoManager() : fRootFile(0), fCaloTree(0), fHodoXTree(0)
   // Trees
   fCaloTree = 0;
   fHodoXTree = 0;
+  fHodoYTree = 0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 TCSHistoManager::TCSHistoManager(char *aname) : fRootFile(0),
-						fCaloTree(0), fHodoXTree(0)
+						fCaloTree(0),
+						fHodoXTree(0),
+						fHodoYTree(0)
 {
   fRootFileName=aname;  
   // histogram(s)
@@ -59,6 +63,7 @@ TCSHistoManager::TCSHistoManager(char *aname) : fRootFile(0),
   // Trees
   fCaloTree = 0;
   fHodoXTree = 0;
+  fHodoYTree = 0;
 
 }
 
@@ -97,6 +102,11 @@ void TCSHistoManager::book()
  fHodoXTree->Branch("detcont", &(fHodoXHitCont.Det));
  fHodoXTree->Branch("chancont", &(fHodoXHitCont.Chan));
  fHodoXTree->Branch("edepcont", &(fHodoXHitCont.Edep));
+
+ fHodoYTree = new TTree("hodoy", "TCS Y hodoscopes' per event hit collections");
+ fHodoYTree->Branch("detcont", &(fHodoYHitCont.Det));
+ fHodoYTree->Branch("chancont", &(fHodoYHitCont.Chan));
+ fHodoYTree->Branch("edepcont", &(fHodoYHitCont.Edep));
 
  G4cout << "\n----> Root file is opened in " << fRootFileName << G4endl;
 
@@ -154,6 +164,12 @@ void TCSHistoManager::FillTrees()
     fHodoXTree->Fill();
   }
 
+  if (fHodoYTree) {
+    //G4cout <<"Filling Tree right now! fHitList size = " << fHitList.size()
+    //<< "\n";
+    fHodoYTree->Fill();
+  }
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -194,7 +210,7 @@ void TCSHistoManager::AddHit(int det, uint col, uint row, double edep) {
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void TCSHistoManager::AddHit(int det, uint chan, double edep) {
+void TCSHistoManager::AddHitX(int det, uint chan, double edep) {
 
   bool found = false;
 
@@ -220,6 +236,36 @@ void TCSHistoManager::AddHit(int det, uint chan, double edep) {
     fHodoXHitCont.Det.push_back(det);
     fHodoXHitCont.Chan.push_back(chan);
     fHodoXHitCont.Edep.push_back(edep);
+  }
+
+}
+
+void TCSHistoManager::AddHitY(int det, uint chan, double edep) {
+
+  bool found = false;
+
+  vector<uint>::iterator ic = fHodoYHitCont.Chan.begin();
+  vector<double>::iterator ie = fHodoYHitCont.Edep.begin();
+
+  for (vector<int>::iterator id=fHodoYHitCont.Det.begin();
+       id != fHodoYHitCont.Det.end(); id++) {
+
+    if (*id == det && *ic == chan) {
+      //      cout << "AddHit: *ie = " << *ie << "  edep = " << edep << endl;
+      *ie += edep;
+      //      cout << "AddHit: *ie = " << *ie << endl;
+      //      getchar();
+      found = true;
+      break;
+    }
+
+    ic++; ie++;
+  }
+
+  if (!found) {
+    fHodoYHitCont.Det.push_back(det);
+    fHodoYHitCont.Chan.push_back(chan);
+    fHodoYHitCont.Edep.push_back(edep);
   }
 
 }

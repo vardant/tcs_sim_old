@@ -54,7 +54,7 @@
 
  <structure>  
 
-   <volume name="Bar">
+   <volume name="HYBar">
      <materialref ref="Polystyrene"/>
      <solidref ref="BarBox"/>
    </volume>
@@ -64,7 +64,7 @@
      <solidref ref="HodoYAssemblyBox"/>
 
      <divisionvol axis="kYAxis" number="NBAR" unit="cm" width="0" offset="0">
-       <volumeref ref="Bar"/>
+       <volumeref ref="HYBar"/>
      </divisionvol>
 
    </volume>

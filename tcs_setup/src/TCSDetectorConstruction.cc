@@ -27,6 +27,7 @@
 #include "TCSDetectorConstruction.hh"
 #include "TCSCalorimeterSD.hh"
 #include "TCSHodoXSD.hh"
+#include "TCSHodoYSD.hh"
 
 // **** Magnetic field ******
 // New include files - used for magnetic field
@@ -178,8 +179,12 @@ void TCSDetectorConstruction::ConstructSDandField()
 
     // Hodoscope SD
     TCSHodoXSD* hodoxSD = new TCSHodoXSD("HodoscopeXSD", "HodoXHitsCollection");
-    SetSensitiveDetector("Bar", hodoxSD, true);
+    SetSensitiveDetector("HXBar", hodoxSD, true);
     SetSensitiveDetector("hodoXWorld", hodoxSD, true);
+
+    TCSHodoYSD* hodoySD = new TCSHodoYSD("HodoscopeYSD", "HodoYHitsCollection");
+    SetSensitiveDetector("HYBar", hodoySD, true);
+    SetSensitiveDetector("hodoYWorld", hodoySD, true);
 
     // Create global magnetic field messenger.
     // Uniform magnetic field is then created automatically if

@@ -30,6 +30,7 @@
 #include "TCSHistoManager.hh"
 #include "TCSCalorimeterHit.hh"
 #include "TCSHodoXHit.hh"
+#include "TCSHodoYHit.hh"
 
 #include "G4Event.hh"
 #include "G4RunManager.hh"
@@ -47,7 +48,8 @@
 
 TCSEventAction::TCSEventAction(TCSHistoManager *histo)
   : G4UserEventAction(), fHistoManager(histo), fPrintModulo(0),
-    fEdep(0.), fCalorimeterCollID(-1), fHodoXCollID(-1), fEvtNo(-1)
+    fEdep(0.), fCalorimeterCollID(-1), fHodoXCollID(-1), fHodoYCollID(-1),
+    fEvtNo(-1)
 {
   //  fPrintModulo = 100000;
   fPrintModulo = 100;
@@ -78,6 +80,11 @@ void TCSEventAction::BeginOfEventAction(const G4Event* evt)
   if(fHodoXCollID<0)
   {
     fHodoXCollID = SDman->GetCollectionID("HodoXHitsCollection");
+  }
+
+  if(fHodoYCollID<0)
+  {
+    fHodoYCollID = SDman->GetCollectionID("HodoYHitsCollection");
   }
 
   // initialization of per event quantities
@@ -171,7 +178,7 @@ void TCSEventAction::EndOfEventAction(const G4Event* event)
 	G4int chan =(*HXC)[i]->GetChannel();
 	//	G4int pid =(*HXC)[i]->GetPID();
 	G4double energy=(*HXC)[i]->GetEnergy();
-	fHistoManager->AddHit(detpos, chan, energy/MeV);
+	fHistoManager->AddHitX(detpos, chan, energy/MeV);
       }
     }
 
@@ -181,7 +188,38 @@ void TCSEventAction::EndOfEventAction(const G4Event* event)
     	   << "hodoscope X hit container inconsistent! ***" << endl;
   }
 
-  if (CC || HXC) {
+  // HodoY hits.
+
+  TCSHodoYHitsCollection* HYC = 0;
+  if(HCE) {
+    HYC = (TCSHodoYHitsCollection*)(HCE->GetHC(fHodoYCollID));
+    //    G4cout << "  Found hodoscope Y hit collection." << G4endl;
+  }
+
+  if(HYC) {
+    int n_hit = HYC->entries();
+    //    G4cout << "  HY n_hit = " << n_hit << G4endl;
+
+    for(int i=0;i<n_hit;i++) {
+      G4int boundary_flag=(*HYC)[i]->GetBoundaryFlag();
+      //Fill Tree if track is within the hodoscope.
+      if (boundary_flag == 0) {
+	G4ThreeVector pos=(*HYC)[i]->GetPos();
+	G4int detpos = pos.getY() > 0. ? 1 : -1;
+	G4int chan =(*HYC)[i]->GetChannel();
+	//	G4int pid =(*HYC)[i]->GetPID();
+	G4double energy=(*HYC)[i]->GetEnergy();
+	fHistoManager->AddHitY(detpos, chan, energy/MeV);
+      }
+    }
+
+    //Check hit container's consistency first.
+    if (!fHistoManager->CheckHodoYHitCont())
+      cout <<"*** TCSEventAction::EndOfEventAction: "
+    	   << "hodoscope Y hit container inconsistent! ***" << endl;
+  }
+
+  if (CC || HXC || HYC) {
     fHistoManager->FillTrees();
     //    getchar();
   }

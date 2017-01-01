@@ -56,7 +56,9 @@ public:
   void Normalize(G4int id, G4double fac);    
 
   void AddHit(int det, uint col, uint row, double edep);
-  void AddHit(int det, uint chan, double edep);
+  //  void AddHit(int det, uint chan, double edep);
+  void AddHitX(int det, uint chan, double edep);
+  void AddHitY(int det, uint chan, double edep);
 
   bool CheckCaloHitCont() {
     uint sz = fCaloHitCont.Det.size();
@@ -68,6 +70,12 @@ public:
   bool CheckHodoXHitCont() {
     uint sz = fHodoXHitCont.Det.size();
     return (fHodoXHitCont.Chan.size() != sz || fHodoXHitCont.Edep.size() != sz
+	    ? false : true);
+  }
+
+  bool CheckHodoYHitCont() {
+    uint sz = fHodoYHitCont.Det.size();
+    return (fHodoYHitCont.Chan.size() != sz || fHodoYHitCont.Edep.size() != sz
 	    ? false : true);
   }
 
@@ -85,9 +93,16 @@ public:
     fHodoXHitCont.Edep.clear();
   };
 
+  void ResetHodoY() {
+    fHodoYHitCont.Det.clear();
+    fHodoYHitCont.Chan.clear();
+    fHodoYHitCont.Edep.clear();
+  };
+
   void Reset() {
     ResetCalo();
     ResetHodoX();
+    ResetHodoY();
   };
 
   void FillTrees();
@@ -101,6 +116,7 @@ private:
   TH1D*    fHisto[MaxHisto];            
   TTree*   fCaloTree;
   TTree*   fHodoXTree;
+  TTree*   fHodoYTree;
 
   struct CaloHitContainer {
     vector<int> Det;
@@ -113,7 +129,7 @@ private:
     vector<int> Det;
     vector<uint> Chan;
     vector<double> Edep;
-  } fHodoXHitCont;
+  } fHodoXHitCont,  fHodoYHitCont;
 
 };
 
