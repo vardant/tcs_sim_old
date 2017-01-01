@@ -184,7 +184,7 @@ void TCSEventAction::EndOfEventAction(const G4Event* event)
     }
 
     //Check hit container's consistency first.
-    if (!fHistoManager->CheckHodoXHitCont())
+    if (!fHistoManager->CheckHodoHitCont(fHistoManager->fHodoXHitCont))
       cout <<"*** TCSEventAction::EndOfEventAction: "
     	   << "hodoscope X hit container inconsistent! ***" << endl;
   }
@@ -216,7 +216,7 @@ void TCSEventAction::EndOfEventAction(const G4Event* event)
     }
 
     //Check hit container's consistency first.
-    if (!fHistoManager->CheckHodoYHitCont())
+    if (!fHistoManager->CheckHodoHitCont( fHistoManager->fHodoYHitCont))
       cout <<"*** TCSEventAction::EndOfEventAction: "
     	   << "hodoscope Y hit container inconsistent! ***" << endl;
   }

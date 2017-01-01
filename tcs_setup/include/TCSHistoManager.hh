@@ -70,17 +70,10 @@ public:
 	    fCaloHitCont.Edep.size() != sz ? false : true);
   }
 
-  //Generalize later on.
-  bool CheckHodoXHitCont() {
-    uint sz = fHodoXHitCont.Det.size();
-    return (fHodoXHitCont.Chan.size() != sz || fHodoXHitCont.Edep.size() != sz
-	    ? false : true);
-  }
-
-  bool CheckHodoYHitCont() {
-    uint sz = fHodoYHitCont.Det.size();
-    return (fHodoYHitCont.Chan.size() != sz || fHodoYHitCont.Edep.size() != sz
-	    ? false : true);
+  bool CheckHodoHitCont(HodoHitContainer &HodoHitCont) {
+    uint sz = HodoHitCont.Det.size();
+    return (HodoHitCont.Chan.size() != sz || HodoHitCont.Edep.size() != sz
+            ? false : true);
   }
 
   void ResetCalo() {
