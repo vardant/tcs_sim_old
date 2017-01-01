@@ -83,23 +83,16 @@ public:
     fCaloHitCont.Edep.clear();
   };
 
-  //Generalize later on.
-  void ResetHodoX() {
-    fHodoXHitCont.Det.clear();
-    fHodoXHitCont.Chan.clear();
-    fHodoXHitCont.Edep.clear();
-  };
-
-  void ResetHodoY() {
-    fHodoYHitCont.Det.clear();
-    fHodoYHitCont.Chan.clear();
-    fHodoYHitCont.Edep.clear();
+  void ResetHodo(HodoHitContainer &HodoHitCont) {
+    HodoHitCont.Det.clear();
+    HodoHitCont.Chan.clear();
+    HodoHitCont.Edep.clear();
   };
 
   void Reset() {
     ResetCalo();
-    ResetHodoX();
-    ResetHodoY();
+    ResetHodo(fHodoXHitCont);
+    ResetHodo(fHodoYHitCont);
   };
 
   void FillTrees();
