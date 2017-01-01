@@ -29,8 +29,7 @@
 #include "TCSRunAction.hh"
 #include "TCSHistoManager.hh"
 #include "TCSCalorimeterHit.hh"
-#include "TCSHodoXHit.hh"
-#include "TCSHodoYHit.hh"
+#include "TCSHodoHit.hh"
 
 #include "G4Event.hh"
 #include "G4RunManager.hh"
@@ -159,66 +158,30 @@ void TCSEventAction::EndOfEventAction(const G4Event* event)
 
   // HodoX hits.
 
-  TCSHodoXHitsCollection* HXC = 0;
+  TCSHodoHitsCollection* HXC = 0;
   if(HCE) {
-    HXC = (TCSHodoXHitsCollection*)(HCE->GetHC(fHodoXCollID));
+    HXC = (TCSHodoHitsCollection*)(HCE->GetHC(fHodoXCollID));
     //    G4cout << "  Found hodoscope X hit collection." << G4endl;
-  }
 
-  if(HXC) {
-    int n_hit = HXC->entries();
-    //    G4cout << "  HX n_hit = " << n_hit << G4endl;
-
-    for(int i=0;i<n_hit;i++) {
-      G4int boundary_flag=(*HXC)[i]->GetBoundaryFlag();
-      //Fill Tree if track is within the hodoscope.
-      if (boundary_flag == 0) {
-	G4ThreeVector pos=(*HXC)[i]->GetPos();
-	G4int detpos = pos.getY() > 0. ? 1 : -1;
-	G4int chan =(*HXC)[i]->GetChannel();
-	//	G4int pid =(*HXC)[i]->GetPID();
-	G4double energy=(*HXC)[i]->GetEnergy();
-	fHistoManager->AddHit(detpos, chan, energy/MeV,
-			      fHistoManager->fHodoXHitCont);
-      }
+    if(HXC) {
+      //    G4cout << "    Add HodoX hits:" << G4endl;
+      AddHodoHit(HXC, fHistoManager->fHodoXHitCont);
     }
 
-    //Check hit container's consistency first.
-    if (!fHistoManager->CheckHodoHitCont(fHistoManager->fHodoXHitCont))
-      cout <<"*** TCSEventAction::EndOfEventAction: "
-    	   << "hodoscope X hit container inconsistent! ***" << endl;
   }
 
   // HodoY hits.
 
-  TCSHodoYHitsCollection* HYC = 0;
+  TCSHodoHitsCollection* HYC = 0;
   if(HCE) {
-    HYC = (TCSHodoYHitsCollection*)(HCE->GetHC(fHodoYCollID));
+    HYC = (TCSHodoHitsCollection*)(HCE->GetHC(fHodoYCollID));
     //    G4cout << "  Found hodoscope Y hit collection." << G4endl;
-  }
 
-  if(HYC) {
-    int n_hit = HYC->entries();
-    //    G4cout << "  HY n_hit = " << n_hit << G4endl;
-
-    for(int i=0;i<n_hit;i++) {
-      G4int boundary_flag=(*HYC)[i]->GetBoundaryFlag();
-      //Fill Tree if track is within the hodoscope.
-      if (boundary_flag == 0) {
-	G4ThreeVector pos=(*HYC)[i]->GetPos();
-	G4int detpos = pos.getY() > 0. ? 1 : -1;
-	G4int chan =(*HYC)[i]->GetChannel();
-	//	G4int pid =(*HYC)[i]->GetPID();
-	G4double energy=(*HYC)[i]->GetEnergy();
-	fHistoManager->AddHit(detpos, chan, energy/MeV,
-			      fHistoManager->fHodoYHitCont);
-      }
+    if(HYC) {
+      //    G4cout << "    Add HodoY hits:" << G4endl;
+      AddHodoHit(HYC, fHistoManager->fHodoYHitCont);
     }
 
-    //Check hit container's consistency first.
-    if (!fHistoManager->CheckHodoHitCont( fHistoManager->fHodoYHitCont))
-      cout <<"*** TCSEventAction::EndOfEventAction: "
-    	   << "hodoscope Y hit container inconsistent! ***" << endl;
   }
 
   if (CC || HXC || HYC) {
@@ -226,6 +189,34 @@ void TCSEventAction::EndOfEventAction(const G4Event* event)
     //    getchar();
   }
   
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void TCSEventAction::AddHodoHit(TCSHodoHitsCollection* HC,
+                                HodoHitContainer& HodoHitCont)
+{
+      int n_hit = HC->entries();
+      //      G4cout << "      HC n_hit = " << n_hit << G4endl;
+
+      for(int i=0;i<n_hit;i++) {
+        G4int boundary_flag=(*HC)[i]->GetBoundaryFlag();
+	//     G4cout << "        boundary_flag = " << boundary_flag << G4endl;
+        //Fill Tree if track is within the hodoscope.
+        if (boundary_flag == 0) {
+          G4ThreeVector pos=(*HC)[i]->GetPos();
+          G4int detpos = pos.getY() > 0. ? 1 : -1;
+          G4int chan =(*HC)[i]->GetChannel();
+          //    G4int pid =(*HC)[i]->GetPID();
+          G4double energy=(*HC)[i]->GetEnergy();
+          fHistoManager->AddHit(detpos, chan, energy/MeV, HodoHitCont);
+        }
+      }
+
+      //Check hit container's consistency first.
+      if (!fHistoManager->CheckHodoHitCont(HodoHitCont))
+        cout <<"*** TCSEventAction::EndOfEventAction: "
+             << "hodoscope hit container inconsistent! ***" << endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

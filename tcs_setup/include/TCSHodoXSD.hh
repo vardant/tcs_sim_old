@@ -24,42 +24,37 @@
 // ********************************************************************
 //
 
-#ifndef TCSEventAction_h
-#define TCSEventAction_h 1
+#ifndef TCSHodoXSD_h
+#define TCSHodoXSD_h 1
 
-#include "G4UserEventAction.hh"
-#include "globals.hh"
-#include "TCSHistoManager.hh"
+#include "G4VSensitiveDetector.hh"
+
 #include "TCSHodoHit.hh"
 
-// Event action class
+#include <vector>
 
-class G4PrimaryParticle;
-class TCSHistoManager;
+class G4Step;
+class G4HCofThisEvent;
 
-class TCSEventAction : public G4UserEventAction {
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+class TCSHodoXSD : public G4VSensitiveDetector {
 
 public:
-  TCSEventAction(TCSHistoManager*);
-  virtual ~TCSEventAction();
-    
-  virtual void BeginOfEventAction(const G4Event* event);
-  virtual void EndOfEventAction(const G4Event* event);
-  TCSHistoManager *GetHistoManager() {return fHistoManager;}
-  void AddEdep(G4double edep) { fEdep += edep; }
-  G4int GetEvtNo() {return fEvtNo;}
+
+  TCSHodoXSD(const G4String& name, const G4String& hitsCollectionName);
+  virtual ~TCSHodoXSD();
   
+  // methods from base class
+  virtual void   Initialize(G4HCofThisEvent* hitCollection);
+  virtual G4bool ProcessHits(G4Step* step, G4TouchableHistory* history);
+  virtual void   EndOfEvent(G4HCofThisEvent* hitCollection);
+
 private:
 
-  G4double  fEdep;
-  TCSHistoManager *fHistoManager;
-  G4int fPrintModulo;
-  G4int fCalorimeterCollID;
-  G4int fHodoXCollID;
-  G4int fHodoYCollID;
-  G4int fEvtNo;
+  TCSHodoHitsCollection* fHitsCollection;
+  G4int lastID;
 
-  void AddHodoHit(TCSHodoHitsCollection* HC, HodoHitContainer& HodoHitCont);
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
