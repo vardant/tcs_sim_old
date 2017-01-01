@@ -178,7 +178,8 @@ void TCSEventAction::EndOfEventAction(const G4Event* event)
 	G4int chan =(*HXC)[i]->GetChannel();
 	//	G4int pid =(*HXC)[i]->GetPID();
 	G4double energy=(*HXC)[i]->GetEnergy();
-	fHistoManager->AddHitX(detpos, chan, energy/MeV);
+	fHistoManager->AddHit(detpos, chan, energy/MeV,
+			      fHistoManager->fHodoXHitCont);
       }
     }
 
@@ -209,7 +210,8 @@ void TCSEventAction::EndOfEventAction(const G4Event* event)
 	G4int chan =(*HYC)[i]->GetChannel();
 	//	G4int pid =(*HYC)[i]->GetPID();
 	G4double energy=(*HYC)[i]->GetEnergy();
-	fHistoManager->AddHitY(detpos, chan, energy/MeV);
+	fHistoManager->AddHit(detpos, chan, energy/MeV,
+			      fHistoManager->fHodoYHitCont);
       }
     }
 

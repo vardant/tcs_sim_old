@@ -39,6 +39,12 @@ class TFile;
 class TTree;
 class TH1D;
 
+struct HodoHitContainer {
+  vector<int> Det;
+  vector<uint> Chan;
+  vector<double> Edep;
+};
+
 const G4int MaxHisto = 5;
 
 class TCSHistoManager {
@@ -56,9 +62,7 @@ public:
   void Normalize(G4int id, G4double fac);    
 
   void AddHit(int det, uint col, uint row, double edep);
-  //  void AddHit(int det, uint chan, double edep);
-  void AddHitX(int det, uint chan, double edep);
-  void AddHitY(int det, uint chan, double edep);
+  void AddHit(int det, uint chan, double edep, HodoHitContainer &HodoHitCont);
 
   bool CheckCaloHitCont() {
     uint sz = fCaloHitCont.Det.size();
@@ -125,12 +129,10 @@ private:
     vector<double> Edep;
   } fCaloHitCont;
 
-  struct HodoHitContainer {
-    vector<int> Det;
-    vector<uint> Chan;
-    vector<double> Edep;
-  } fHodoXHitCont,  fHodoYHitCont;
+  HodoHitContainer fHodoXHitCont;
+  HodoHitContainer fHodoYHitCont;
 
+  friend class TCSEventAction;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

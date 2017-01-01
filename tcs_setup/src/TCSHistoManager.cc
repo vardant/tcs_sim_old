@@ -210,20 +210,24 @@ void TCSHistoManager::AddHit(int det, uint col, uint row, double edep) {
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void TCSHistoManager::AddHitX(int det, uint chan, double edep) {
+void TCSHistoManager::AddHit(int det, uint chan, double edep,
+                             HodoHitContainer& HodoHitCont) {
+
+  // Add hit to a hodoscope/tracker hit conatainer.
 
   bool found = false;
 
-  vector<uint>::iterator ic = fHodoXHitCont.Chan.begin();
-  vector<double>::iterator ie = fHodoXHitCont.Edep.begin();
+  vector<uint>::iterator ic = HodoHitCont.Chan.begin();
+  vector<double>::iterator ie = HodoHitCont.Edep.begin();
 
-  for (vector<int>::iterator id=fHodoXHitCont.Det.begin();
-       id != fHodoXHitCont.Det.end(); id++) {
+  for (vector<int>::iterator id=HodoHitCont.Det.begin();
+       id != HodoHitCont.Det.end(); id++) {
 
     if (*id == det && *ic == chan) {
-      //      cout << "AddHit: *ie = " << *ie << "  edep = " << edep << endl;
+      //      cout << "          TCSHistoManager::AddHit: *ie = " << *ie
+      //           << "  edep = " << edep << endl;
       *ie += edep;
-      //      cout << "AddHit: *ie = " << *ie << endl;
+      //    cout << "          TCSHistoManager::AddHit: *ie = " << *ie << endl;
       //      getchar();
       found = true;
       break;
@@ -233,39 +237,10 @@ void TCSHistoManager::AddHitX(int det, uint chan, double edep) {
   }
 
   if (!found) {
-    fHodoXHitCont.Det.push_back(det);
-    fHodoXHitCont.Chan.push_back(chan);
-    fHodoXHitCont.Edep.push_back(edep);
-  }
-
-}
-
-void TCSHistoManager::AddHitY(int det, uint chan, double edep) {
-
-  bool found = false;
-
-  vector<uint>::iterator ic = fHodoYHitCont.Chan.begin();
-  vector<double>::iterator ie = fHodoYHitCont.Edep.begin();
-
-  for (vector<int>::iterator id=fHodoYHitCont.Det.begin();
-       id != fHodoYHitCont.Det.end(); id++) {
-
-    if (*id == det && *ic == chan) {
-      //      cout << "AddHit: *ie = " << *ie << "  edep = " << edep << endl;
-      *ie += edep;
-      //      cout << "AddHit: *ie = " << *ie << endl;
-      //      getchar();
-      found = true;
-      break;
-    }
-
-    ic++; ie++;
-  }
-
-  if (!found) {
-    fHodoYHitCont.Det.push_back(det);
-    fHodoYHitCont.Chan.push_back(chan);
-    fHodoYHitCont.Edep.push_back(edep);
+    HodoHitCont.Det.push_back(det);
+    HodoHitCont.Chan.push_back(chan);
+    HodoHitCont.Edep.push_back(edep);
+    //G4cout << "          TCSHistoManager::AddHit: hit pushed back" << G4endl;
   }
 
 }
