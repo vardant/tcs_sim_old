@@ -36,8 +36,9 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-TCSHistoManager::TCSHistoManager() : fRootFile(0), fCaloTree(0), fHodoXTree(0),
-				     fHodoYTree(0)
+TCSHistoManager::TCSHistoManager() : fRootFile(0), fCaloTree(0),
+				     fHodoXTree(0), fHodoYTree(0),
+				     fTrackerXTree(0), fTrackerYTree(0)
 {
   fRootFileName="tcs_setup.root";
   // histogram(s)
@@ -47,6 +48,8 @@ TCSHistoManager::TCSHistoManager() : fRootFile(0), fCaloTree(0), fHodoXTree(0),
   fCaloTree = 0;
   fHodoXTree = 0;
   fHodoYTree = 0;
+  fTrackerXTree = 0;
+  fTrackerYTree = 0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -54,7 +57,9 @@ TCSHistoManager::TCSHistoManager() : fRootFile(0), fCaloTree(0), fHodoXTree(0),
 TCSHistoManager::TCSHistoManager(char *aname) : fRootFile(0),
 						fCaloTree(0),
 						fHodoXTree(0),
-						fHodoYTree(0)
+						fHodoYTree(0),
+						fTrackerXTree(0),
+						fTrackerYTree(0)
 {
   fRootFileName=aname;  
   // histogram(s)
@@ -64,6 +69,8 @@ TCSHistoManager::TCSHistoManager(char *aname) : fRootFile(0),
   fCaloTree = 0;
   fHodoXTree = 0;
   fHodoYTree = 0;
+  fTrackerXTree = 0;
+  fTrackerYTree = 0;
 
 }
 
@@ -107,6 +114,18 @@ void TCSHistoManager::book()
  fHodoYTree->Branch("detcont", &(fHodoYHitCont.Det));
  fHodoYTree->Branch("chancont", &(fHodoYHitCont.Chan));
  fHodoYTree->Branch("edepcont", &(fHodoYHitCont.Edep));
+
+ fTrackerXTree = new TTree("trackerx",
+			   "TCS X trackers' per event hit collections");
+ fTrackerXTree->Branch("detcont", &(fTrackerXHitCont.Det));
+ fTrackerXTree->Branch("chancont", &(fTrackerXHitCont.Chan));
+ fTrackerXTree->Branch("edepcont", &(fTrackerXHitCont.Edep));
+
+ fTrackerYTree = new TTree("trackery",
+			   "TCS Y trackers' per event hit collections");
+ fTrackerYTree->Branch("detcont", &(fTrackerYHitCont.Det));
+ fTrackerYTree->Branch("chancont", &(fTrackerYHitCont.Chan));
+ fTrackerYTree->Branch("edepcont", &(fTrackerYHitCont.Edep));
 
  G4cout << "\n----> Root file is opened in " << fRootFileName << G4endl;
 
@@ -168,6 +187,18 @@ void TCSHistoManager::FillTrees()
     //G4cout <<"Filling Tree right now! fHitList size = " << fHitList.size()
     //<< "\n";
     fHodoYTree->Fill();
+  }
+
+  if (fTrackerXTree) {
+    //G4cout <<"Filling Tree right now! fHitList size = " << fHitList.size()
+    //<< "\n";
+    fTrackerXTree->Fill();
+  }
+
+  if (fTrackerYTree) {
+    //G4cout <<"Filling Tree right now! fHitList size = " << fHitList.size()
+    //<< "\n";
+    fTrackerYTree->Fill();
   }
 
 }
@@ -240,6 +271,43 @@ void TCSHistoManager::AddHit(int det, uint chan, double edep,
     HodoHitCont.Det.push_back(det);
     HodoHitCont.Chan.push_back(chan);
     HodoHitCont.Edep.push_back(edep);
+    //G4cout << "          TCSHistoManager::AddHit: hit pushed back" << G4endl;
+  }
+
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void TCSHistoManager::AddHit(int det, uint chan, double edep,
+                             TrackerHitContainer& TrackerHitCont) {
+
+  // Add hit to a hodoscope/tracker hit conatainer.
+
+  bool found = false;
+
+  vector<uint>::iterator ic = TrackerHitCont.Chan.begin();
+  vector<double>::iterator ie = TrackerHitCont.Edep.begin();
+
+  for (vector<int>::iterator id=TrackerHitCont.Det.begin();
+       id != TrackerHitCont.Det.end(); id++) {
+
+    if (*id == det && *ic == chan) {
+      //      cout << "          TCSHistoManager::AddHit: *ie = " << *ie
+      //           << "  edep = " << edep << endl;
+      *ie += edep;
+      //    cout << "          TCSHistoManager::AddHit: *ie = " << *ie << endl;
+      //      getchar();
+      found = true;
+      break;
+    }
+
+    ic++; ie++;
+  }
+
+  if (!found) {
+    TrackerHitCont.Det.push_back(det);
+    TrackerHitCont.Chan.push_back(chan);
+    TrackerHitCont.Edep.push_back(edep);
     //G4cout << "          TCSHistoManager::AddHit: hit pushed back" << G4endl;
   }
 

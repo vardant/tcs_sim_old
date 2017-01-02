@@ -21,4 +21,4 @@
 /gun/energy 11 GeV
 #
 #/run/beamOn 32000000
-/run/beamOn 100000
+/run/beamOn 1000000

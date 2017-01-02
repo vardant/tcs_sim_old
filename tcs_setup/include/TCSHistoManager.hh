@@ -45,6 +45,12 @@ struct HodoHitContainer {
   vector<double> Edep;
 };
 
+struct TrackerHitContainer {
+  vector<int> Det;
+  vector<uint> Chan;
+  vector<double> Edep;
+};
+
 const G4int MaxHisto = 5;
 
 class TCSHistoManager {
@@ -63,6 +69,8 @@ public:
 
   void AddHit(int det, uint col, uint row, double edep);
   void AddHit(int det, uint chan, double edep, HodoHitContainer &HodoHitCont);
+  void AddHit(int det, uint chan, double edep,
+	      TrackerHitContainer &TrackerHitCont);
 
   bool CheckCaloHitCont() {
     uint sz = fCaloHitCont.Det.size();
@@ -73,6 +81,12 @@ public:
   bool CheckHodoHitCont(HodoHitContainer &HodoHitCont) {
     uint sz = HodoHitCont.Det.size();
     return (HodoHitCont.Chan.size() != sz || HodoHitCont.Edep.size() != sz
+            ? false : true);
+  }
+
+  bool CheckTrackerHitCont(TrackerHitContainer &TrackerHitCont) {
+    uint sz = TrackerHitCont.Det.size();
+    return (TrackerHitCont.Chan.size() != sz || TrackerHitCont.Edep.size() != sz
             ? false : true);
   }
 
@@ -89,10 +103,18 @@ public:
     HodoHitCont.Edep.clear();
   };
 
+  void ResetTracker(TrackerHitContainer &TrackerHitCont) {
+    TrackerHitCont.Det.clear();
+    TrackerHitCont.Chan.clear();
+    TrackerHitCont.Edep.clear();
+  };
+
   void Reset() {
     ResetCalo();
     ResetHodo(fHodoXHitCont);
     ResetHodo(fHodoYHitCont);
+    ResetTracker(fTrackerXHitCont);
+    ResetTracker(fTrackerYHitCont);
   };
 
   void FillTrees();
@@ -107,6 +129,8 @@ private:
   TTree*   fCaloTree;
   TTree*   fHodoXTree;
   TTree*   fHodoYTree;
+  TTree*   fTrackerXTree;
+  TTree*   fTrackerYTree;
 
   struct CaloHitContainer {
     vector<int> Det;
@@ -117,6 +141,9 @@ private:
 
   HodoHitContainer fHodoXHitCont;
   HodoHitContainer fHodoYHitCont;
+
+  TrackerHitContainer fTrackerXHitCont;
+  TrackerHitContainer fTrackerYHitCont;
 
   friend class TCSEventAction;
 };
