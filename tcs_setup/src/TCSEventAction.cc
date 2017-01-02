@@ -201,10 +201,10 @@ void TCSEventAction::EndOfEventAction(const G4Event* event)
   TCSTrackerHitsCollection* TXC = 0;
   if(HCE) {
     TXC = (TCSTrackerHitsCollection*)(HCE->GetHC(fTrackerXCollID));
-    G4cout << "  Found tracker X hit collection." << G4endl;
+    //    G4cout << "  Found tracker X hit collection." << G4endl;
 
     if(TXC) {
-      G4cout << "    Add TrackerX hits:" << G4endl;
+      //      G4cout << "    Add TrackerX hits:" << G4endl;
       AddTrackerHit(TXC, fHistoManager->fTrackerXHitCont);
     }
 
@@ -226,7 +226,7 @@ void TCSEventAction::EndOfEventAction(const G4Event* event)
 
   if (CC || HXC || HYC || TXC || TYC) {
     fHistoManager->FillTrees();
-    getchar();
+    //    getchar();
   }
   
 }
@@ -265,11 +265,11 @@ void TCSEventAction::AddTrackerHit(TCSTrackerHitsCollection* HC,
 				   TrackerHitContainer& TrackerHitCont)
 {
       int n_hit = HC->entries();
-      G4cout << "      HC n_hit = " << n_hit << G4endl;
+      //      G4cout << "      HC n_hit = " << n_hit << G4endl;
 
       for(int i=0;i<n_hit;i++) {
         G4int boundary_flag=(*HC)[i]->GetBoundaryFlag();
-	G4cout << "        boundary_flag = " << boundary_flag << G4endl;
+	//	G4cout << "        boundary_flag = " << boundary_flag << G4endl;
         //Fill Tree if track is within the tracker.
         if (boundary_flag == 0) {
           G4ThreeVector pos=(*HC)[i]->GetPos();

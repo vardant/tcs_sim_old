@@ -34,7 +34,8 @@
   <quantity name="hight_right_win" type="length" value="47.9" unit="cm"/>
 
   <!-- The hight and thickness are guesses -->
-  <quantity name="hight_entr_flange" type="length" value="5.0" unit="cm"/>
+  <!-- quantity name="hight_entr_flange" type="length" value="5." unit="cm"/ -->
+  <quantity name="hight_entr_flange" type="length" value="0.1" unit="mm"/>
   <quantity name="diam_entr_flange" type="length" value="2*4.445" unit="cm"/>
   <quantity name="thick_entr_flange" type="length" value="1." unit="cm"/>
 
@@ -49,7 +50,10 @@
   <position name="center" x="0" y="0" z="0"/>
   <rotation name="identity" x="0" y="0" z="0"/>
 
-  <quantity name="wextent" type="length" value="200." unit="cm"/>
+  <!-- quantity name="wextent" type="length" value="200." unit="cm"/ -->
+  <quantity name="wR" type="length" value="48.1" unit="cm"/>
+  <quantity name="wH" type="length" value="81.3" unit="cm"/>
+
  </define>
 
  <materials>
@@ -129,7 +133,8 @@
    <rotationref ref="rotxp90"/>
   </union>
 
-  <box name="ChamberAssemblyBox" x="wextent" y="wextent" z="wextent"/>
+  <!-- box name="ChamberAssemblyBox" x="wextent" y="wextent" z="wextent"/ -->
+  <tube name="ChamberAssemblyCyl" rmin="0." rmax="wR" z="wH" deltaphi="TWOPI"/>
  </solids>
 
  <structure>  
@@ -179,19 +184,12 @@
 
   <volume name="ChamberAssembly">
    <materialref ref="Air"/>
-   <solidref ref="ChamberAssemblyBox"/>
+   <solidref ref="ChamberAssemblyCyl"/>
 
    <physvol>
      <volumeref ref="ChamberBody"/>
      <positionref ref="center"/>
      <rotationref ref="rotxp90"/>
-   </physvol> 
-
-   <!-- Target cell parallel to magnet coils for TCS -->
-   <physvol>
-     <file name="tcs_gdmls/target.gdml"/>
-     <positionref ref="center"/>
-     <rotationref ref="rotyp90"/>
    </physvol> 
 
   </volume>
