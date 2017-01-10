@@ -16,8 +16,8 @@
 # 
 # electron 11 GeV,  direction (0.,0.,1.)
 #
-#/gun/particle e-
-/gun/particle gamma
+/gun/particle e-
+#/gun/particle gamma
 /gun/energy 11 GeV
 #
 #/run/beamOn 32000000

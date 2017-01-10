@@ -55,7 +55,7 @@ TCSPrimaryGeneratorAction::TCSPrimaryGeneratorAction() :
   getline(file, line);  iss.str(line);
   iss >> fX0 >> fY0 >> fZ0;
   getline(file, line);  iss.str(line);
-  iss >> fDX >> fDY;
+  iss >> fDX >> fDY >> fDZ;
 
   file.close();
 
@@ -65,14 +65,16 @@ TCSPrimaryGeneratorAction::TCSPrimaryGeneratorAction() :
   fZ0 *= cm;
   fDX *= mm;
   fDY *= mm;
+  fDZ *= mm;
 
   G4cout << "TCSPrimaryGeneratorAction: Initial beam definition:" << G4endl;
   G4cout << "  Particle " << fParticleName << G4endl;
   G4cout << "  Energy = " << fEnergy/GeV << " GeV" << G4endl;
   G4cout << "  Position: (" << fX0/cm << ", " << fY0/cm << ", " << fZ0/cm
          << ") cm" << G4endl;
-  G4cout << "  Beam size: " << fDX/mm << " x " << fDY/mm << " mm^2" << G4endl;
-  G4cout << "  Beam along Z axis" << G4endl << G4endl;
+  G4cout << "  Beam sizes: " << fDX/mm << " x " << fDY/mm << " x " << fDZ
+	 << " mm^3" << G4endl;
+  //  G4cout << "  Beam along Z axis" << G4endl << G4endl;
 
   G4int n_particle = 1;
   fParticleGun  = new G4ParticleGun(n_particle);
@@ -101,16 +103,20 @@ void TCSPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
   G4double x = 0.;
   G4double y = 0.;
+  G4double z = 0.;
 
   do {
     x = G4UniformRand()-.5;
     y = G4UniformRand()-.5;
   } while (x*x+y*y > .25);
 
+  z = G4UniformRand()-.5;
+
   x = x*fDX + fX0;
   y = y*fDY + fY0;
+  z = z*fDZ + fZ0;
 
-  fParticleGun->SetParticlePosition(G4ThreeVector(x,y,fZ0));
+  fParticleGun->SetParticlePosition(G4ThreeVector(x,y,z));
   fParticleGun->GeneratePrimaryVertex(anEvent);
 }
 
