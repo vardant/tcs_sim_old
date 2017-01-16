@@ -2,6 +2,7 @@ e-		particle
 6.6		energy, GeV
 0 0 -45.  	position, cm
 10. 10. 0.	transverse and longitudinal sizes, mm.
+tcs		beam/tcs mode
 
 mu-       particle
 0.3       energy, GeV

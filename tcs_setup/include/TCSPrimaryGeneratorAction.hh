@@ -32,6 +32,8 @@
 #include "globals.hh"
 #include <fstream>
 
+#include "TCSGen.hh"
+
 using namespace std;
 
 class G4ParticleGun;
@@ -39,9 +41,6 @@ class G4Event;
 class G4Box;
 
 /// The primary generator action class with particle gun.
-///
-/// The default kinematic is a 6 MeV gamma, randomly distribued 
-/// in front of the phantom across 80% of the (X,Y) phantom size.
 
 class TCSPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction {
 
@@ -65,6 +64,11 @@ private:
   G4double fEnergy;
   G4double fX0, fY0, fZ0;          // beam position
   G4double fDX, fDY, fDZ;          // beam dimensions
+  enum mode {beam, tcs} fMode;     // beam/tcs mode  
+
+  TCSGen fTCSGen;
+  long fTCSEntryNum;
+  uint fTCSPartNum;
 
 };
 
