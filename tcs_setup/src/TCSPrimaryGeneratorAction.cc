@@ -35,7 +35,9 @@
 #include "G4ParticleDefinition.hh"
 #include "G4SystemOfUnits.hh"
 #include "Randomize.hh"
+
 //#include "TCSGen.hh"
+#include "G4HEPEvtInterface.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -76,7 +78,6 @@ TCSPrimaryGeneratorAction::TCSPrimaryGeneratorAction() :
   else
     fMode = beam;
 
-
   G4cout << "TCSPrimaryGeneratorAction: Initial beam definition:" << G4endl;
   G4cout << "  Particle " << fParticleName << G4endl;
   G4cout << "  Energy = " << fEnergy/GeV << " GeV" << G4endl;
@@ -86,14 +87,15 @@ TCSPrimaryGeneratorAction::TCSPrimaryGeneratorAction() :
 	 << " mm^3" << G4endl;
   G4cout << "  Requested mode: " << mode_flag << endl;
   if (fMode == tcs)
-    G4cout << "  *** TCS mode: will read TCS events from input root file! ***"
+    G4cout << "  *** TCS mode: will read TCS events from input file! ***"
 	   << G4endl;
   else
     G4cout << "  Will use Beam source." << G4endl;
 
   if (fMode == tcs) {
-    fTCSEntryNum = 0;
-    fTCSPartNum = 0;
+    //    fTCSEntryNum = 0;
+    //    fTCSPartNum = 0;
+    fHEPEvt = new G4HEPEvtInterface("tcs_gen.data");
   }
   else {
     G4int n_particle = 1;
@@ -113,6 +115,11 @@ TCSPrimaryGeneratorAction::TCSPrimaryGeneratorAction() :
 
 TCSPrimaryGeneratorAction::~TCSPrimaryGeneratorAction()
 {
+if (fMode == tcs) {
+  delete fHEPEvt;
+  //  fHEPEvt = 0;
+}
+else
   delete fParticleGun;
 }
 
@@ -122,12 +129,12 @@ void TCSPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
   // This function is called at the begining of each event.
 
-  G4cout << "TCSPrimaryGeneratorAction::GeneratePrimaries: fMode ";
-  if (fMode == tcs)
-    G4cout << "tcs";
-  else
-    G4cout << "beam";
-  G4cout << G4endl;
+  //  G4cout << "TCSPrimaryGeneratorAction::GeneratePrimaries: fMode ";
+  //  if (fMode == tcs)
+  //    G4cout << "tcs";
+  //  else
+  //    G4cout << "beam";
+  //  G4cout << G4endl;
 
   G4double x = 0.;
   G4double y = 0.;
@@ -144,57 +151,16 @@ void TCSPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   y = y*fDY + fY0;
   z = z*fDZ + fZ0;
 
-  G4cout << "   xyz: " << x << " " << y << " " << z << G4endl;
-
-  fParticleGun->SetParticlePosition(G4ThreeVector(x,y,z));
+  //  G4cout << "   xyz: " << x << " " << y << " " << z << G4endl;
 
   if (fMode == tcs) {
-
-    if (fTCSPartNum == 3) {
-      fTCSPartNum = 0;
-      fTCSEntryNum++;
-    }
-
-    //    G4cout << "TCSPrimaryGeneratorAction::GeneratePrimaries:" << G4endl;
-    G4cout << "   PartNum = " << fTCSPartNum << "  EntryNum = " << fTCSEntryNum
-	   << G4endl;
-
-    //    fTCSGen.GetEntry(fTCSEntryNum);
-    //    fTCSGen.Show();
-    TCSGen t;
-    t.GetEntry(12);
-    t.Show();
-    G4cout << "   Got TCS entry" << G4endl;
-    getchar();
-
-    //    TLorentzVector lv = fBHM.GetLV((tcs_particle) fBHMPartNum);
-    //    G4cout << "   lv: " << lv(0) << " " << lv(1) << " " << lv(2) << " "
-    //	   << lv(3) << G4endl;
-    //    getchar();
-
-    /*
-    fParticleGun->SetParticleMomentumDirection(
-		  G4ThreeVector(lv(0),lv(1),lv(2)));
-    fParticleGun->SetParticleEnergy(lv(3)*GeV);
-
-    switch ((tcs_particle) fBHMPartNum) {
-    case em: fParticleName = "e-"; break;
-    case ep: fParticleName = "e+"; break;
-    case p : fParticleName = "p"; break;
-    };
-
-    G4cout << "   ParticleName: " << fParticleName << G4endl;
-
-    G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-    G4ParticleDefinition* particle=particleTable->FindParticle(fParticleName);
-
-    fBHMPartNum++;
-
-    getchar();
-    */
+    fHEPEvt->SetParticlePosition(G4ThreeVector(x,y,z));
+    fHEPEvt->GeneratePrimaryVertex(anEvent);
   }
-
-  fParticleGun->GeneratePrimaryVertex(anEvent);
+  else {
+    fParticleGun->SetParticlePosition(G4ThreeVector(x,y,z));
+    fParticleGun->GeneratePrimaryVertex(anEvent);
+  }
 
 }
 

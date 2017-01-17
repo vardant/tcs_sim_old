@@ -32,13 +32,14 @@
 #include "globals.hh"
 #include <fstream>
 
-#include "TCSGen.hh"
+//#include "TCSGen.hh"
 
 using namespace std;
 
 class G4ParticleGun;
+class G4VPrimaryGenerator;
 class G4Event;
-class G4Box;
+//class G4Box;
 
 /// The primary generator action class with particle gun.
 
@@ -54,6 +55,8 @@ public:
   
   // method to access particle gun
   const G4ParticleGun* GetParticleGun() const { return fParticleGun; }
+
+  const G4VPrimaryGenerator* GetPrimaryGenerator() const { return fHEPEvt; }
   
 private:
 
@@ -66,9 +69,10 @@ private:
   G4double fDX, fDY, fDZ;          // beam dimensions
   enum mode {beam, tcs} fMode;     // beam/tcs mode  
 
-  TCSGen fTCSGen;
-  long fTCSEntryNum;
-  uint fTCSPartNum;
+  //  TCSGen fTCSGen;
+  //  long fTCSEntryNum;
+  //  uint fTCSPartNum;
+  G4VPrimaryGenerator* fHEPEvt;
 
 };
 

@@ -127,6 +127,7 @@ void TCSRunAction::EndOfRunAction(const G4Run* run)
    = static_cast<const TCSPrimaryGeneratorAction*>
      (G4RunManager::GetRunManager()->GetUserPrimaryGeneratorAction());
 
+  /*
   G4String runCondition;
 
   if (generatorAction)
@@ -137,7 +138,8 @@ void TCSRunAction::EndOfRunAction(const G4Run* run)
     G4double particleEnergy = particleGun->GetParticleEnergy();
     runCondition += G4BestUnit(particleEnergy,"Energy");
   }
-        
+  */        
+
   // Print
 
   if (IsMaster()) {
@@ -150,7 +152,8 @@ void TCSRunAction::EndOfRunAction(const G4Run* run)
      << G4endl
      << "--------------------End of Local Run------------------------";
   }
-  
+
+  /*  
   G4cout
      << G4endl
      << " The run consists of " << nofEvents << " "<< runCondition
@@ -171,6 +174,7 @@ void TCSRunAction::EndOfRunAction(const G4Run* run)
   G4cout << " Dose in scoring volume : " 
 	 << G4BestUnit(dose,"Dose") << " +- " << G4BestUnit(rmsDose,"Dose")
 	 << "/(uA*hour)" << G4endl;
+  */
 
   //save histograms
   //
