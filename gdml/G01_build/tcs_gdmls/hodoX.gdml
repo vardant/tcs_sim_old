@@ -57,6 +57,7 @@
    <volume name="HXBar">
      <materialref ref="Polystyrene"/>
      <solidref ref="BarBox"/>
+    <auxiliary auxtype="Color" auxvalue="orange" />
    </volume>
 
    <volume name="HodoXAssembly">

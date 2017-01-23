@@ -31,6 +31,8 @@
 #include "G4SDManager.hh"
 #include "G4ios.hh"
 
+#include "TCSTrackInformation.hh"
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 TCSCalorimeterSD::TCSCalorimeterSD(const G4String& name,
@@ -101,6 +103,14 @@ G4bool TCSCalorimeterSD::ProcessHits(G4Step* step, G4TouchableHistory*)
     //  getchar();
     ////    return true;
   }
+
+  TCSTrackInformation* info =
+    (TCSTrackInformation*)(step->GetTrack()->GetUserInformation());
+  //  G4cout << " Got info " << G4endl;
+  G4cout << " Original Track ID " << info->GetOriginalTrackID() << G4endl;
+  G4cout << " Original particle "
+	 << info->GetOriginalParticle()->GetPDGEncoding() << G4endl;
+  //  getchar();
 
   //  G4cout << "TCSCalorimeterSD::ProcessHits:" << G4endl;
   //  G4cout << " PreStepPoint volume:" <<

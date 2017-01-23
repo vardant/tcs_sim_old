@@ -57,6 +57,7 @@
    <volume name="TYBar">
      <materialref ref="Polystyrene"/>
      <solidref ref="BarBox"/>
+    <auxiliary auxtype="Color" auxvalue="yellow" />
    </volume>
 
    <volume name="TrackerYAssembly">

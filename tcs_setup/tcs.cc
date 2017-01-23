@@ -37,6 +37,7 @@
 #include "TCSPrimaryGeneratorAction.hh"
 #include "TCSRunAction.hh"
 #include "TCSEventAction.hh"
+#include "TCSTrackingAction.hh"
 #include "TCSSteppingAction.hh"
 #include "TCSHistoManager.hh"
 
@@ -235,6 +236,9 @@ int main(int argc,char** argv)
 
   TCSEventAction* event_action = new TCSEventAction(histo);
   runManager->SetUserAction(event_action);
+
+  TCSTrackingAction* tracking_action = new TCSTrackingAction();
+  runManager->SetUserAction(tracking_action);
 
   TCSSteppingAction* stepping_action = new TCSSteppingAction(event_action);
   runManager->SetUserAction(stepping_action);
