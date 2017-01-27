@@ -31,6 +31,8 @@
 #include "G4SDManager.hh"
 #include "G4ios.hh"
 
+#include "TCSTrackInformation.hh"
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 TCSHodoXSD::TCSHodoXSD(const G4String& name,
@@ -73,7 +75,11 @@ void TCSHodoXSD::Initialize(G4HCofThisEvent* hce)
 
 G4bool TCSHodoXSD::ProcessHits(G4Step* step, G4TouchableHistory*)
 {
-  G4int pid = step->GetTrack()->GetDefinition()->GetPDGEncoding();
+  //  G4int pid = step->GetTrack()->GetDefinition()->GetPDGEncoding();
+  TCSTrackInformation* info =
+    (TCSTrackInformation*)(step->GetTrack()->GetUserInformation());
+  G4int pid = info->GetOriginalParticle()->GetPDGEncoding();
+
   G4ThreeVector pos = step->GetTrack()->GetPosition();
 
   // Particle entering hodoscope, save kinetic energy for flux calc-s.

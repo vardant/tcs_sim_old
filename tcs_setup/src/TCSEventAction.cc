@@ -247,9 +247,9 @@ void TCSEventAction::AddHodoHit(TCSHodoHitsCollection* HC,
           G4ThreeVector pos=(*HC)[i]->GetPos();
           G4int detpos = pos.getY() > 0. ? 1 : -1;
           G4int chan =(*HC)[i]->GetChannel();
-          //    G4int pid =(*HC)[i]->GetPID();
+	  G4int pid =(*HC)[i]->GetPID();
           G4double energy=(*HC)[i]->GetEnergy();
-          fHistoManager->AddHit(detpos, chan, energy/MeV, HodoHitCont);
+          fHistoManager->AddHit(detpos, chan, energy/MeV, pid, HodoHitCont);
         }
       }
 
@@ -275,9 +275,9 @@ void TCSEventAction::AddTrackerHit(TCSTrackerHitsCollection* HC,
           G4ThreeVector pos=(*HC)[i]->GetPos();
           G4int detpos = pos.getY() > 0. ? 1 : -1;
           G4int chan =(*HC)[i]->GetChannel();
-          //    G4int pid =(*HC)[i]->GetPID();
+	  G4int pid =(*HC)[i]->GetPID();
           G4double energy=(*HC)[i]->GetEnergy();
-          fHistoManager->AddHit(detpos, chan, energy/MeV, TrackerHitCont);
+          fHistoManager->AddHit(detpos, chan, energy/MeV, pid, TrackerHitCont);
         }
       }
 

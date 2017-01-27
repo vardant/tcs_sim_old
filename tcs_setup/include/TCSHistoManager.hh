@@ -43,12 +43,14 @@ struct HodoHitContainer {
   vector<int> Det;
   vector<uint> Chan;
   vector<double> Edep;
+  vector<int> PID;
 };
 
 struct TrackerHitContainer {
   vector<int> Det;
   vector<uint> Chan;
   vector<double> Edep;
+  vector<int> PID;
 };
 
 const G4int MaxHisto = 5;
@@ -68,8 +70,9 @@ public:
   void Normalize(G4int id, G4double fac);    
 
   void AddHit(int det, uint col, uint row, double edep, int pid);
-  void AddHit(int det, uint chan, double edep, HodoHitContainer &HodoHitCont);
-  void AddHit(int det, uint chan, double edep,
+  void AddHit(int det, uint chan, double edep, int pid,
+	      HodoHitContainer &HodoHitCont);
+  void AddHit(int det, uint chan, double edep, int pid,
 	      TrackerHitContainer &TrackerHitCont);
 
   bool CheckCaloHitCont() {
@@ -82,12 +85,14 @@ public:
   bool CheckHodoHitCont(HodoHitContainer &HodoHitCont) {
     uint sz = HodoHitCont.Det.size();
     return (HodoHitCont.Chan.size() != sz || HodoHitCont.Edep.size() != sz
+	    || HodoHitCont.PID.size() != sz
             ? false : true);
   }
 
   bool CheckTrackerHitCont(TrackerHitContainer &TrackerHitCont) {
     uint sz = TrackerHitCont.Det.size();
     return (TrackerHitCont.Chan.size() != sz || TrackerHitCont.Edep.size() != sz
+	    || TrackerHitCont.PID.size() != sz
             ? false : true);
   }
 
@@ -103,12 +108,14 @@ public:
     HodoHitCont.Det.clear();
     HodoHitCont.Chan.clear();
     HodoHitCont.Edep.clear();
+    HodoHitCont.PID.clear();
   };
 
   void ResetTracker(TrackerHitContainer &TrackerHitCont) {
     TrackerHitCont.Det.clear();
     TrackerHitCont.Chan.clear();
     TrackerHitCont.Edep.clear();
+    TrackerHitCont.PID.clear();
   };
 
   void Reset() {

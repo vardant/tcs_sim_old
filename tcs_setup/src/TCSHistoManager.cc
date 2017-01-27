@@ -110,23 +110,27 @@ void TCSHistoManager::book()
  fHodoXTree->Branch("detcont", &(fHodoXHitCont.Det));
  fHodoXTree->Branch("chancont", &(fHodoXHitCont.Chan));
  fHodoXTree->Branch("edepcont", &(fHodoXHitCont.Edep));
+ fHodoXTree->Branch("pidcont", &(fHodoXHitCont.PID));
 
  fHodoYTree = new TTree("hodoy", "TCS Y hodoscopes' per event hit collections");
  fHodoYTree->Branch("detcont", &(fHodoYHitCont.Det));
  fHodoYTree->Branch("chancont", &(fHodoYHitCont.Chan));
  fHodoYTree->Branch("edepcont", &(fHodoYHitCont.Edep));
+ fHodoYTree->Branch("pidcont", &(fHodoYHitCont.PID));
 
  fTrackerXTree = new TTree("trackerx",
 			   "TCS X trackers' per event hit collections");
  fTrackerXTree->Branch("detcont", &(fTrackerXHitCont.Det));
  fTrackerXTree->Branch("chancont", &(fTrackerXHitCont.Chan));
  fTrackerXTree->Branch("edepcont", &(fTrackerXHitCont.Edep));
+ fTrackerXTree->Branch("pidcont", &(fTrackerXHitCont.PID));
 
  fTrackerYTree = new TTree("trackery",
 			   "TCS Y trackers' per event hit collections");
  fTrackerYTree->Branch("detcont", &(fTrackerYHitCont.Det));
  fTrackerYTree->Branch("chancont", &(fTrackerYHitCont.Chan));
  fTrackerYTree->Branch("edepcont", &(fTrackerYHitCont.Edep));
+ fTrackerYTree->Branch("pidcont", &(fTrackerYHitCont.PID));
 
  G4cout << "\n----> Root file is opened in " << fRootFileName << G4endl;
 
@@ -244,20 +248,21 @@ void TCSHistoManager::AddHit(int det, uint col,uint row, double edep, int pid) {
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void TCSHistoManager::AddHit(int det, uint chan, double edep,
+void TCSHistoManager::AddHit(int det, uint chan, double edep, int pid,
                              HodoHitContainer& HodoHitCont) {
 
-  // Add hit to a hodoscope/tracker hit conatainer.
+  // Add hit to a hodoscope/tracker hit container.
 
   bool found = false;
 
   vector<uint>::iterator ic = HodoHitCont.Chan.begin();
   vector<double>::iterator ie = HodoHitCont.Edep.begin();
+  vector<int>::iterator ip = HodoHitCont.PID.begin();
 
   for (vector<int>::iterator id=HodoHitCont.Det.begin();
        id != HodoHitCont.Det.end(); id++) {
 
-    if (*id == det && *ic == chan) {
+    if (*id == det && *ic == chan && *ip == pid) {
       //      cout << "          TCSHistoManager::AddHit: *ie = " << *ie
       //           << "  edep = " << edep << endl;
       *ie += edep;
@@ -267,13 +272,14 @@ void TCSHistoManager::AddHit(int det, uint chan, double edep,
       break;
     }
 
-    ic++; ie++;
+    ic++; ie++; ip++;
   }
 
   if (!found) {
     HodoHitCont.Det.push_back(det);
     HodoHitCont.Chan.push_back(chan);
     HodoHitCont.Edep.push_back(edep);
+    HodoHitCont.PID.push_back(pid);
     //G4cout << "          TCSHistoManager::AddHit: hit pushed back" << G4endl;
   }
 
@@ -281,7 +287,7 @@ void TCSHistoManager::AddHit(int det, uint chan, double edep,
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void TCSHistoManager::AddHit(int det, uint chan, double edep,
+void TCSHistoManager::AddHit(int det, uint chan, double edep, int pid,
                              TrackerHitContainer& TrackerHitCont) {
 
   // Add hit to a hodoscope/tracker hit conatainer.
@@ -290,11 +296,12 @@ void TCSHistoManager::AddHit(int det, uint chan, double edep,
 
   vector<uint>::iterator ic = TrackerHitCont.Chan.begin();
   vector<double>::iterator ie = TrackerHitCont.Edep.begin();
+  vector<int>::iterator ip = TrackerHitCont.PID.begin();
 
   for (vector<int>::iterator id=TrackerHitCont.Det.begin();
        id != TrackerHitCont.Det.end(); id++) {
 
-    if (*id == det && *ic == chan) {
+    if (*id == det && *ic == chan && *ip == pid) {
       //      cout << "          TCSHistoManager::AddHit: *ie = " << *ie
       //           << "  edep = " << edep << endl;
       *ie += edep;
@@ -304,13 +311,14 @@ void TCSHistoManager::AddHit(int det, uint chan, double edep,
       break;
     }
 
-    ic++; ie++;
+    ic++; ie++; ip++;
   }
 
   if (!found) {
     TrackerHitCont.Det.push_back(det);
     TrackerHitCont.Chan.push_back(chan);
     TrackerHitCont.Edep.push_back(edep);
+    TrackerHitCont.PID.push_back(pid);
     //G4cout << "          TCSHistoManager::AddHit: hit pushed back" << G4endl;
   }
 

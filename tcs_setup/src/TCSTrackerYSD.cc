@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 
-#include "TCSHodoYSD.hh"
+#include "TCSTrackerYSD.hh"
 #include "G4HCofThisEvent.hh"
 #include "G4Step.hh"
 #include "G4ThreeVector.hh"
@@ -35,31 +35,31 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-TCSHodoYSD::TCSHodoYSD(const G4String& name,
+TCSTrackerYSD::TCSTrackerYSD(const G4String& name,
 				   const G4String& hitsCollectionName) 
  : G4VSensitiveDetector(name),
    fHitsCollection(0), lastID(-1)
 {
   collectionName.insert(hitsCollectionName);
 
-  G4cout << "TCSHodoYSD::TCSHodoYSD: constructed" << G4endl;
+  G4cout << "TCSTrackerYSD::TCSTrackerYSD: constructed" << G4endl;
   //  getchar();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-TCSHodoYSD::~TCSHodoYSD() 
+TCSTrackerYSD::~TCSTrackerYSD() 
 {
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void TCSHodoYSD::Initialize(G4HCofThisEvent* hce)
+void TCSTrackerYSD::Initialize(G4HCofThisEvent* hce)
 {
   // Create hits collection
 
   fHitsCollection 
-  = new TCSHodoHitsCollection(SensitiveDetectorName, collectionName[0]); 
+  = new TCSTrackerHitsCollection(SensitiveDetectorName, collectionName[0]); 
 
   // Add this collection in hce
 
@@ -67,15 +67,15 @@ void TCSHodoYSD::Initialize(G4HCofThisEvent* hce)
     = G4SDManager::GetSDMpointer()->GetCollectionID(collectionName[0]);
   hce->AddHitsCollection( hcID, fHitsCollection ); 
 
-  //  G4cout << "TCSHodoYSD::Initialize: initialized" << G4endl;
+  //  G4cout << "TCSTrackerYSD::Initialize: initialized" << G4endl;
   //  getchar();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4bool TCSHodoYSD::ProcessHits(G4Step* step, G4TouchableHistory*)
+G4bool TCSTrackerYSD::ProcessHits(G4Step* step, G4TouchableHistory*)
 {
-  //  G4int pid = step->GetTrack()->GetDefinition()->GetPDGEncoding();
+//  G4int pid = step->GetTrack()->GetDefinition()->GetPDGEncoding();
   TCSTrackInformation* info =
     (TCSTrackInformation*)(step->GetTrack()->GetUserInformation());
   G4int pid = info->GetOriginalParticle()->GetPDGEncoding();
@@ -84,13 +84,13 @@ G4bool TCSHodoYSD::ProcessHits(G4Step* step, G4TouchableHistory*)
 
   // Particle entering hodoscope, save kinetic energy for flux calc-s.
   if (step->GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetName() ==
-      "hodoYWorld_PV" &&
+      "trackerYWorld_PV" &&
       step->GetPostStepPoint()->GetTouchableHandle()->GetVolume()->GetName() ==
-      "HYBar_PV" &&
+      "TYBar_PV" &&
       step->GetPostStepPoint()->GetStepStatus() == fGeomBoundary) {
     G4int chan =step->GetPostStepPoint()->GetTouchableHandle()->GetCopyNumber();
     G4double ekin = step->GetTrack()->GetKineticEnergy();
-    TCSHodoHit* hit = new TCSHodoHit(chan, pid, ekin, pos, 1);
+    TCSTrackerHit* hit = new TCSTrackerHit(chan, pid, ekin, pos, 1);
     fHitsCollection->insert( hit );
     ////    return true;
   }
@@ -99,14 +99,14 @@ G4bool TCSHodoYSD::ProcessHits(G4Step* step, G4TouchableHistory*)
   //  if (step->GetTrack()->GetVolume()->GetName() == "HYBar_PV") {
 
   G4TouchableHandle touch = step->GetPreStepPoint()->GetTouchableHandle();
-  if (touch->GetVolume(1)->GetName() == "HodoYAssembly_PV" &&
-      touch->GetVolume()->GetName() == "HYBar_PV") {
+  if (touch->GetVolume(1)->GetName() == "TrackerYAssembly_PV" &&
+      touch->GetVolume()->GetName() == "TYBar_PV") {
     G4int chan = touch->GetCopyNumber();
     G4double edep = step->GetTotalEnergyDeposit();
-    TCSHodoHit* hit = new TCSHodoHit(chan, pid, edep, pos, 0);
+    TCSTrackerHit* hit = new TCSTrackerHit(chan, pid, edep, pos, 0);
     fHitsCollection->insert( hit );
 
-    //G4cout << "TCSHodoYSD::ProcessHits:" << G4endl;
+    //G4cout << "TCSTrackerYSD::ProcessHits:" << G4endl;
     //G4cout << "  stepvol: " << step->GetTrack()->GetVolume()->GetName()
     //<< "  prestepvol: "
     //<< step->GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetName()
@@ -115,7 +115,7 @@ G4bool TCSHodoYSD::ProcessHits(G4Step* step, G4TouchableHistory*)
     //	   << G4endl;
     //    getchar();
 
-    //G4cout << "TCSHodoYSD::ProcessHits:" << G4endl;
+    //G4cout << "TCSTrackerYSD::ProcessHits:" << G4endl;
     //G4cout << "  chan = "
     //<< step->GetPreStepPoint()->GetTouchableHandle()->GetCopyNumber()
     //	 << "  chan1 = "
@@ -128,7 +128,7 @@ G4bool TCSHodoYSD::ProcessHits(G4Step* step, G4TouchableHistory*)
     ////    return true;
   }
 
-  //  G4cout << "TCSHodoYSD::ProcessHits:" << G4endl;
+  //  G4cout << "TCSTrackerYSD::ProcessHits:" << G4endl;
   //  G4cout << " PreStepPoint volume:" <<
   //    step->GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetName()
   //  	 << G4endl;
@@ -141,7 +141,7 @@ G4bool TCSHodoYSD::ProcessHits(G4Step* step, G4TouchableHistory*)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void TCSHodoYSD::EndOfEvent(G4HCofThisEvent*)
+void TCSTrackerYSD::EndOfEvent(G4HCofThisEvent*)
 {
   //  if ( verboseLevel>1 ) { 
   //  G4int nofHits = fHitsCollection->entries();
@@ -151,7 +151,7 @@ void TCSHodoYSD::EndOfEvent(G4HCofThisEvent*)
   //  for ( G4int i=0; i<nofHits; i++ ) (*fHitsCollection)[i]->delete();
   //}
 
-  //  G4cout << "TCSHodoYSD::EndOfEvent: end of event" << G4endl;
+  //  G4cout << "TCSTrackerYSD::EndOfEvent: end of event" << G4endl;
   //  getchar();
 }
 
