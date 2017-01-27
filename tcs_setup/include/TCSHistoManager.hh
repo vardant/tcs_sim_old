@@ -67,7 +67,7 @@ public:
   void FillHisto(G4int id, G4double bin, G4double weight = 1.0);
   void Normalize(G4int id, G4double fac);    
 
-  void AddHit(int det, uint col, uint row, double edep);
+  void AddHit(int det, uint col, uint row, double edep, int pid);
   void AddHit(int det, uint chan, double edep, HodoHitContainer &HodoHitCont);
   void AddHit(int det, uint chan, double edep,
 	      TrackerHitContainer &TrackerHitCont);
@@ -75,7 +75,8 @@ public:
   bool CheckCaloHitCont() {
     uint sz = fCaloHitCont.Det.size();
     return (fCaloHitCont.Col.size() != sz || fCaloHitCont.Row.size() != sz ||
-	    fCaloHitCont.Edep.size() != sz ? false : true);
+	    fCaloHitCont.Edep.size() != sz || fCaloHitCont.PID.size() != sz
+	    ? false : true);
   }
 
   bool CheckHodoHitCont(HodoHitContainer &HodoHitCont) {
@@ -95,6 +96,7 @@ public:
     fCaloHitCont.Col.clear();
     fCaloHitCont.Row.clear();
     fCaloHitCont.Edep.clear();
+    fCaloHitCont.PID.clear();
   };
 
   void ResetHodo(HodoHitContainer &HodoHitCont) {
@@ -137,6 +139,7 @@ private:
     vector<uint> Col;
     vector<uint> Row;
     vector<double> Edep;
+    vector<int> PID;
   } fCaloHitCont;
 
   HodoHitContainer fHodoXHitCont;

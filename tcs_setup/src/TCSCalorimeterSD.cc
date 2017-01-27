@@ -75,7 +75,11 @@ void TCSCalorimeterSD::Initialize(G4HCofThisEvent* hce)
 
 G4bool TCSCalorimeterSD::ProcessHits(G4Step* step, G4TouchableHistory*)
 {
-  G4int pid = step->GetTrack()->GetDefinition()->GetPDGEncoding();
+  //  G4int pid = step->GetTrack()->GetDefinition()->GetPDGEncoding();
+  TCSTrackInformation* info =
+    (TCSTrackInformation*)(step->GetTrack()->GetUserInformation());
+  G4int pid = info->GetOriginalParticle()->GetPDGEncoding();
+
   G4ThreeVector pos = step->GetTrack()->GetPosition();
 
   // Particle entering calorimeter, save kinetic energy for flux calc-s.
@@ -104,12 +108,11 @@ G4bool TCSCalorimeterSD::ProcessHits(G4Step* step, G4TouchableHistory*)
     ////    return true;
   }
 
-  TCSTrackInformation* info =
-    (TCSTrackInformation*)(step->GetTrack()->GetUserInformation());
-  //  G4cout << " Got info " << G4endl;
-  G4cout << " Original Track ID " << info->GetOriginalTrackID() << G4endl;
-  G4cout << " Original particle "
-	 << info->GetOriginalParticle()->GetPDGEncoding() << G4endl;
+  //  TCSTrackInformation* info =
+  //    (TCSTrackInformation*)(step->GetTrack()->GetUserInformation());
+  //  G4cout << " Original Track ID " << info->GetOriginalTrackID() << G4endl;
+  //  G4cout << " Original particle "
+  //	 << info->GetOriginalParticle()->GetPDGEncoding() << G4endl;
   //  getchar();
 
   //  G4cout << "TCSCalorimeterSD::ProcessHits:" << G4endl;

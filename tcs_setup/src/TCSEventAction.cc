@@ -154,9 +154,9 @@ void TCSEventAction::EndOfEventAction(const G4Event* event)
 	G4int detpos = pos.getY() > 0. ? 1 : -1;
 	G4int col =(*CC)[i]->GetCol();
 	G4int row =(*CC)[i]->GetRow();
-	//	G4int pid =(*CC)[i]->GetPID();
+	G4int pid =(*CC)[i]->GetPID();
 	G4double energy=(*CC)[i]->GetEnergy();
-	fHistoManager->AddHit(detpos, col, row, energy/MeV);
+	fHistoManager->AddHit(detpos, col, row, energy/MeV, pid);
       }
     }
 

@@ -104,6 +104,7 @@ void TCSHistoManager::book()
  fCaloTree->Branch("colcont", &(fCaloHitCont.Col));
  fCaloTree->Branch("rowcont", &(fCaloHitCont.Row));
  fCaloTree->Branch("edepcont", &(fCaloHitCont.Edep));
+ fCaloTree->Branch("pidcont", &(fCaloHitCont.PID));
 
  fHodoXTree = new TTree("hodox", "TCS X hodoscopes' per event hit collections");
  fHodoXTree->Branch("detcont", &(fHodoXHitCont.Det));
@@ -205,18 +206,19 @@ void TCSHistoManager::FillTrees()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void TCSHistoManager::AddHit(int det, uint col, uint row, double edep) {
+void TCSHistoManager::AddHit(int det, uint col,uint row, double edep, int pid) {
 
   bool found = false;
 
   vector<uint>::iterator ic = fCaloHitCont.Col.begin();
   vector<uint>::iterator ir = fCaloHitCont.Row.begin();
   vector<double>::iterator ie = fCaloHitCont.Edep.begin();
+  vector<int>::iterator ip = fCaloHitCont.PID.begin();
 
   for (vector<int>::iterator id=fCaloHitCont.Det.begin();
        id != fCaloHitCont.Det.end(); id++) {
 
-    if (*id == det && *ic == col && *ir == row) {
+    if (*id == det && *ic == col && *ir == row && *ip == pid) {
       //      cout << "AddHit: *ie = " << *ie << "  edep = " << edep << endl;
       *ie += edep;
       //      cout << "AddHit: *ie = " << *ie << endl;
@@ -225,7 +227,7 @@ void TCSHistoManager::AddHit(int det, uint col, uint row, double edep) {
       break;
     }
 
-    ic++; ir++; ie++;
+    ic++; ir++; ie++; ip++;
   }
 
   if (!found) {
@@ -233,6 +235,7 @@ void TCSHistoManager::AddHit(int det, uint col, uint row, double edep) {
     fCaloHitCont.Col.push_back(col);
     fCaloHitCont.Row.push_back(row);
     fCaloHitCont.Edep.push_back(edep);
+    fCaloHitCont.PID.push_back(pid);
     //cout << "Pushed back cal hit " << det << " " << col << " " << row << " "
     //<< edep << endl;
   }
