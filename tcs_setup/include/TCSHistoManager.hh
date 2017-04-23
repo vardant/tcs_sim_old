@@ -32,6 +32,7 @@
 
 #include "G4SystemOfUnits.hh"    
 #include <vector>
+#include <fstream>
 
 using namespace std;
 
@@ -60,7 +61,7 @@ class TCSHistoManager {
 public:
   
   TCSHistoManager();
-  TCSHistoManager(char*);
+  TCSHistoManager(char*,char*);
   ~TCSHistoManager();
    
   void book();
@@ -140,6 +141,7 @@ private:
   TTree*   fHodoYTree;
   TTree*   fTrackerXTree;
   TTree*   fTrackerYTree;
+  TTree*   fKinTree;
 
   struct CaloHitContainer {
     vector<int> Det;
@@ -154,6 +156,24 @@ private:
 
   TrackerHitContainer fTrackerXHitCont;
   TrackerHitContainer fTrackerYHitCont;
+
+  struct KinVar {
+    double Q2;
+    double t;
+    double s;
+    double xi;
+    double tau;
+    double eta;
+    double phi_cm;
+    double the_cm;
+    double psf;
+    double flux_factor;
+    double crs_BH;
+    double Eg;
+  } fKinVar;
+
+  char*    fKinFileName;
+  ifstream fKinFile;
 
   friend class TCSEventAction;
 };

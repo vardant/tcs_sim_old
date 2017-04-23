@@ -221,10 +221,12 @@ int main(int argc,char** argv)
   // Set a HistoManager.
   // Look for root filename in the input line, otherwise do the default.
 
+  char *kinFileName="tcs_gen.kin_data";
   char *rootFileName="tcs_setup.root";
-  if ( argc >= 3 )    rootFileName=argv[2];
+  if ( argc >= 3 )    kinFileName=argv[2];
+  if ( argc >= 4 )    rootFileName=argv[3];
 
-  TCSHistoManager*  histo = new TCSHistoManager(rootFileName);
+  TCSHistoManager*  histo = new TCSHistoManager(kinFileName,rootFileName);
 
   // Set user action classes.
 

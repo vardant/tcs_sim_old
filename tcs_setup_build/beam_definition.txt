@@ -1,8 +1,26 @@
 e-		particle
 6.6		energy, GeV
 0. 0. 0.  	position, cm
+0. 0. 0.	transverse and longitudinal sizes, mm.
+tcs		beam/tcs mode
+
+e-       particle
+0.1        energy, GeV
+0 -30. 0     position, cm
+0 0 0     sizes, mm
+beam
+
+e-		particle
+6.6		energy, GeV
+0. 0. 0.  	position, cm
 10. 10. 30.	transverse and longitudinal sizes, mm.
 tcs		beam/tcs mode
+
+mu-       particle
+0.6        energy, GeV
+0 0 0     position, cm
+0 0 0     sizes, mm
+beam
 
 e-		particle
 6.6		energy, GeV
@@ -10,13 +28,7 @@ e-		particle
 10. 10. 0.	transverse and longitudinal sizes, mm.
 beam		beam/tcs mode
 
-mu-       particle
-0.3       energy, GeV
-0 0 50   position, cm
-0 0       sizes, mm
-
 geantino        particle
 11        energy, GeV
 3 3 -50   position, cm
 0 0       sizes, mm
-

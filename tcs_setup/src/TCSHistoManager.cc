@@ -36,41 +36,42 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-TCSHistoManager::TCSHistoManager() : fRootFile(0), fCaloTree(0),
+TCSHistoManager::TCSHistoManager() : fKinFile(0), fRootFile(0), fCaloTree(0),
 				     fHodoXTree(0), fHodoYTree(0),
 				     fTrackerXTree(0), fTrackerYTree(0)
 {
+  fKinFileName ="tcs_gen.kin_data";
   fRootFileName="tcs_setup.root";
   // histogram(s)
   for (G4int k=0; k<MaxHisto; k++) fHisto[k] = 0;
     
   // Trees
-  fCaloTree = 0;
-  fHodoXTree = 0;
-  fHodoYTree = 0;
-  fTrackerXTree = 0;
-  fTrackerYTree = 0;
+  //  fCaloTree = 0;
+  //  fHodoXTree = 0;
+  //  fHodoYTree = 0;
+  //  fTrackerXTree = 0;
+  //  fTrackerYTree = 0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-TCSHistoManager::TCSHistoManager(char *aname) : fRootFile(0),
-						fCaloTree(0),
-						fHodoXTree(0),
-						fHodoYTree(0),
-						fTrackerXTree(0),
-						fTrackerYTree(0)
+TCSHistoManager::TCSHistoManager(char *kname, char *rname) :
+  fKinFile(0), fRootFile(0), fCaloTree(0), fHodoXTree(0), fHodoYTree(0),
+  fTrackerXTree(0), fTrackerYTree(0)
 {
-  fRootFileName=aname;  
+  fKinFileName = kname;  
+  fRootFileName= rname;  
+
   // histogram(s)
   for (G4int k=0; k<MaxHisto; k++) fHisto[k] = 0;
     
   // Trees
-  fCaloTree = 0;
-  fHodoXTree = 0;
-  fHodoYTree = 0;
-  fTrackerXTree = 0;
-  fTrackerYTree = 0;
+  //  fCaloTree = 0;
+  //  fHodoXTree = 0;
+  //  fHodoYTree = 0;
+  //  fTrackerXTree = 0;
+  //  fTrackerYTree = 0;
+  //  fKinTree = 0;
 
 }
 
@@ -85,6 +86,15 @@ TCSHistoManager::~TCSHistoManager()
 
 void TCSHistoManager::book()
 { 
+
+  fKinFile.open(fKinFileName);   //to read per event kinematic quantities
+  if(!fKinFile) {
+   G4cout << " ***** HistoManager::book :" 
+          << " problem openiing Kin file *****"
+          << G4endl;
+   return;
+  }
+
  // Creating tree containers to handle histograms and Trees.
  // These trees are associated to an output file.
  //
@@ -132,6 +142,20 @@ void TCSHistoManager::book()
  fTrackerYTree->Branch("edepcont", &(fTrackerYHitCont.Edep));
  fTrackerYTree->Branch("pidcont", &(fTrackerYHitCont.PID));
 
+ fKinTree = new TTree("kin","TCS kinematics");
+ fKinTree->Branch("Q2",&fKinVar.Q2);
+ fKinTree->Branch("t",&fKinVar.t);
+ fKinTree->Branch("s",&fKinVar.s);
+ fKinTree->Branch("xi",&fKinVar.xi);
+ fKinTree->Branch("tau",&fKinVar.tau);
+ fKinTree->Branch("eta",&fKinVar.eta);
+ fKinTree->Branch("phi_cm",&fKinVar.phi_cm);
+ fKinTree->Branch("the_cm",&fKinVar.the_cm);
+ fKinTree->Branch("psf",&fKinVar.psf);
+ fKinTree->Branch("flux_factor",&fKinVar.flux_factor);
+ fKinTree->Branch("crs_BH",&fKinVar.crs_BH);
+ fKinTree->Branch("Eg",&fKinVar.Eg);
+
  G4cout << "\n----> Root file is opened in " << fRootFileName << G4endl;
 
 }
@@ -145,6 +169,7 @@ void TCSHistoManager::save()
     fRootFile->Close();        // and closing the tree (and the file)
     G4cout << "\n----> Histogram Tree is saved \n" << G4endl;
   }
+  fKinFile.close();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -204,6 +229,15 @@ void TCSHistoManager::FillTrees()
     //G4cout <<"Filling Tree right now! fHitList size = " << fHitList.size()
     //<< "\n";
     fTrackerYTree->Fill();
+  }
+
+  fKinFile >> fKinVar.Q2 >> fKinVar.t >> fKinVar.s >> fKinVar.xi >> fKinVar.tau
+	   >> fKinVar.eta >> fKinVar.phi_cm >> fKinVar.the_cm
+	   >> fKinVar.psf >> fKinVar.flux_factor >> fKinVar.crs_BH
+	   >> fKinVar.Eg;
+
+  if (fKinTree) {
+    fKinTree->Fill();
   }
 
 }
