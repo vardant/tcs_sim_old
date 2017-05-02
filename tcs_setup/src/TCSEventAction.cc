@@ -229,6 +229,8 @@ void TCSEventAction::EndOfEventAction(const G4Event* event)
     //    getchar();
   }
   
+
+  if (fEvtNo%1000 == 0) fHistoManager->autosave();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

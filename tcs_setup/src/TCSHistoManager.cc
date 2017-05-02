@@ -174,6 +174,22 @@ void TCSHistoManager::save()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+void TCSHistoManager::autosave() {
+  TDirectory* savedir = gDirectory;
+  fRootFile->cd();
+  fCaloTree->AutoSave(); // save tree to file
+  fHodoXTree->AutoSave();
+  fHodoYTree->AutoSave();
+  fTrackerXTree->AutoSave();
+  fTrackerYTree->AutoSave();
+  fKinTree->AutoSave();
+  fRootFile->SaveSelf();  // save file directory containing this tree
+  savedir->cd();
+  cout << "TCSHistoManager::autosave: saved data in root file" << endl;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
 void TCSHistoManager::FillHisto(G4int ih, G4double xbin, G4double weight)
 {
   if (ih >= MaxHisto) {

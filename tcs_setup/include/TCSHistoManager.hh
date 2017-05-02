@@ -66,6 +66,7 @@ public:
    
   void book();
   void save();
+  void autosave();    //save intermittent data.
 
   void FillHisto(G4int id, G4double bin, G4double weight = 1.0);
   void Normalize(G4int id, G4double fac);    

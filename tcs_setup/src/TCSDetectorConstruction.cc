@@ -42,9 +42,15 @@
 #include "G4Mag_UsualEqRhs.hh"
 #include "G4ClassicalRK4.hh"
 #include "G4ExplicitEuler.hh"
+#include "G4ImplicitEuler.hh"
 #include "G4HelixImplicitEuler.hh"
+#include "G4HelixExplicitEuler.hh"
+#include "G4HelixSimpleRunge.hh"
+#include "G4NystromRK4.hh"
+#include "G4SimpleHeum.hh"
+#include "G4SimpleRunge.hh"
 #include "G4ChordFinder.hh"
-#include "G4EqMagElectricField.hh"
+//#include "G4EqMagElectricField.hh"
 #include "G4PropagatorInField.hh"
 #include "G4UserLimits.hh"
 
@@ -124,15 +130,19 @@ void TCSDetectorConstruction::ConstructField()
     //in magnetic fields, it sets the accuracy to be used.
 
     fEquation = new G4Mag_UsualEqRhs (fField);
-    //    fStepper = new G4ClassicalRK4 (fEquation);
-    //    fChordFinder = new G4ChordFinder(fField,1e-4*m,fStepper);
-    //    globalFieldMgr->SetChordFinder(fChordFinder);
-    //    globalFieldMgr->SetDetectorField(fField);
-    //    globalFieldMgr->GetChordFinder()->SetDeltaChord(1e-4*m);
-    //    globalFieldMgr->SetDeltaIntersection(1e-4*m);
-    //    globalFieldMgr->SetDeltaOneStep(1e-4*m);
 
-    fStepper = new G4ClassicalRK4 (fEquation);
+    fStepper = new G4ClassicalRK4 (fEquation);    //Default choice.
+    //    fStepper = new G4SimpleHeum (fEquation);    //300 ev/min
+    //    fStepper = new G4ImplicitEuler (fEquation);    //300 ev/min
+    //    fStepper = new G4ExplicitEuler (fEquation);    //<300 ev/min
+    //    fStepper = new G4SimpleRunge (fEquation);    //300 ev/min
+
+    //Mag. field
+    //    fStepper = new G4HelixImplicitEuler (fEquation);    //does not work
+    //    fStepper = new G4HelixExplicitEuler (fEquation);    //slow
+    //    fStepper = new G4HelixSimpleRunge (fEquation);    //does not work
+    //    fStepper = new G4NystromRK4 (fEquation);    //slow
+
     fChordFinder = new G4ChordFinder(fField,1e-4*m,fStepper);
     globalFieldMgr->SetChordFinder(fChordFinder);
     globalFieldMgr->SetDetectorField(fField);
@@ -140,16 +150,6 @@ void TCSDetectorConstruction::ConstructField()
     globalFieldMgr->SetDeltaIntersection(1e-4*m);
     globalFieldMgr->SetDeltaOneStep(1e-4*m);
 
-    /*
-    fStepper = new G4HelixImplicitEuler( fEquation ); 
-    fChordFinder = new G4ChordFinder(fField,1e-3*m,fStepper);
-    globalFieldMgr->SetChordFinder(fChordFinder);
-    globalFieldMgr->SetDetectorField(fField);
-    globalFieldMgr->GetChordFinder()->SetDeltaChord(1e-4*m);
-    globalFieldMgr->SetDeltaIntersection(1e-4*m);
-    globalFieldMgr->SetDeltaOneStep(0.01*m);
-    */
-     
     G4cout << "Magnetic field has been constructed " << 
       "in TCSDetectorConstruction::ConstructField()" << G4endl;
     fieldIsInitialized = true; 
