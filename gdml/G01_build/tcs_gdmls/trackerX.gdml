@@ -3,12 +3,13 @@
       xsi:noNamespaceSchemaLocation=
       "/home/vardan/Downloads/GDML_3_1_3/schema/gdml.xsd">
 
-<!-- TCS X Tracker -->
+  <!-- TCS X Tracker -->
+  <!-- Adjusted to the SANE OVC -->
 
  <define>
    <constant name="NBAR" value="332"/>
    <constant name="BARX" value="0.1"/>
-   <constant name="BARY" value="19.7"/>
+   <constant name="BARY" value="15."/>
    <constant name="BARZ" value="0.1"/>
 
    <constant name="eps" value="0.000001"/>

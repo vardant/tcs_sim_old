@@ -3,35 +3,28 @@
       xsi:noNamespaceSchemaLocation=
       "/home/vardan/Downloads/GDML_3_1_3/schema/gdml.xsd">
 
+  <!-- Corrected according to G2PDetectorConstruction.cc from Jixie, -->
+  <!-- also according to SANE OVC drawings -->
+
  <define>
   <constant name="PI" value="1.*pi"/>
   <constant name="TWOPI" value="2.*pi"/>
 
-  <!-- From Jixie's presentation on WACS from 2014 HA/C collab. meeting, -->
-  <!-- also S.Tajima's presetation from 2006 on SANE, semi-SANE and Compton. -->
-  <quantity name="rin_cham" type="length" value="45.6" unit="cm"/>
-  <quantity name="thick_cham" type="length" value="2.4" unit="cm"/>
-  <quantity name="hight_out_cham" type="length" value="2*15.98*2.54" unit="cm"/>
-  <quantity name="hight_in_cham" type="length" value="30.5*2.54" unit="cm"/>
+  <quantity name="rin_cham" type="length" value="35.75/2*2.54" unit="cm"/>
+  <quantity name="thick_cham" type="length" value="2.54" unit="cm"/>
+  <quantity name="hight_out_cham" type="length" value="2*18.25*2.54" unit="cm"/>
+  <quantity name="hight_in_cham" type="length" value="17*2*2.54" unit="cm"/>
 
-  <quantity name="thick_left_win" type="length" value="0.33" unit="mm"/>
-  <quantity name="thick_right_win" type="length" value="0.33" unit="mm"/>
+  <quantity name="thick_left_win" type="length" value="0.020*2.54" unit="cm"/>
+  <quantity name="thick_right_win" type="length" value="0.020*2.54" unit="cm"/>
 
-  <!-- quantity name="philo_left_win" type="angle" value="-108." unit="deg"/ -->
-  <!-- quantity name="dphi_left_win" type="angle" value="36." unit="deg"/ -->
-  <!-- quantity name="philo_right_win" type="angle" value="72." unit="deg"/ -->
-  <!-- quantity name="dphi_right_win" type="angle" value="36." unit="deg"/ -->
-  <!-- Adjusted to have +/-17 deg. acceptance horizonthally -->
-  <quantity name="philo_left_win" type="angle" value="-107." unit="deg"/>
-  <quantity name="dphi_left_win" type="angle" value="34." unit="deg"/>
-  <quantity name="philo_right_win" type="angle" value="73." unit="deg"/>
-  <quantity name="dphi_right_win" type="angle" value="34." unit="deg"/>
+  <quantity name="philo_left_win" type="angle" value="-108." unit="deg"/>
+  <quantity name="dphi_left_win" type="angle" value="36." unit="deg"/>
+  <quantity name="philo_right_win" type="angle" value="72." unit="deg"/>
+  <quantity name="dphi_right_win" type="angle" value="36." unit="deg"/>
 
-  <!-- quantity name="hight_left_win" type="length" value="46." unit="cm"/ -->
-  <!-- quantity name="hight_right_win" type="length" value="46." unit="cm"/ -->
-  <!-- Adjusted to have +/-26.5 deg. acceptance verically -->
-  <quantity name="hight_left_win" type="length" value="47.9" unit="cm"/>
-  <quantity name="hight_right_win" type="length" value="47.9" unit="cm"/>
+  <quantity name="hight_left_win" type="length" value="15*2.54" unit="cm"/>
+  <quantity name="hight_right_win" type="length" value="15*2.54" unit="cm"/>
 
   <!-- The hight and thickness are guesses -->
   <!-- quantity name="hight_entr_flange" type="length" value="5." unit="cm"/ -->

@@ -3,10 +3,11 @@
       xsi:noNamespaceSchemaLocation=
       "/home/vardan/Downloads/GDML_3_1_3/schema/gdml.xsd">
 
-<!-- TCS Y hodoscope -->
+  <!-- TCS Y hodoscope -->
+  <!-- Adjusted to the SANE OVC -->
 
  <define>
-   <constant name="NBAR" value="16"/>
+   <constant name="NBAR" value="12"/>
    <constant name="BARX" value="108."/>
    <constant name="BARY" value="4."/>
    <constant name="BARZ" value="1."/>

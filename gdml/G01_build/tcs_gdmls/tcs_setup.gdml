@@ -3,16 +3,17 @@
       xsi:noNamespaceSchemaLocation=
       "/home/vardan/Downloads/GDML_3_1_3/schema/gdml.xsd">
 
-<!-- Hall C TCS setup -->
+  <!-- Hall C TCS setup -->
+  <!-- Adjusted to the SANE OVC -->
 
  <define>
   <constant name="PI" value="1.*pi"/>
   <constant name="TWOPI" value="2.*pi"/>
 
-  <constant name="DET_POS_ANGLE" value="16.25"/>
-  <constant name="SIN_POS" value="0.279829"/>
-  <constant name="COS_POS" value="0.960050"/>
-  <constant name="DET_TILT_ANGLE" value="16.25"/>
+  <constant name="DET_POS_ANGLE" value="13.835"/>
+  <constant name="SIN_POS" value="0.239130440753"/>
+  <constant name="COS_POS" value="0.970987452187"/>
+  <constant name="DET_TILT_ANGLE" value="13.835"/>
   <constant name="CALO_DIST" value="150.+9."/>
   <constant name="HODOY_DIST" value="150.-2.-0.5"/>
   <constant name="HODOX_DIST" value="150.-2.-0.5-0.5-0.5"/>
