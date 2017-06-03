@@ -43,9 +43,9 @@
   <position name="center" x="0" y="0" z="0"/>
   <rotation name="identity" x="0" y="0" z="0"/>
 
-  <!-- quantity name="wextent" type="length" value="200." unit="cm"/ -->
-  <quantity name="wR" type="length" value="48.1" unit="cm"/>
-  <quantity name="wH" type="length" value="81.3" unit="cm"/>
+  <quantity name="wX" type="length" value="(rin_cham+thick_cham)*2+1"/>
+  <quantity name="wY" type="length" value="hight_out_cham+1"/>
+  <quantity name="wZ" type="length" value="(rin_cham+thick_cham)*2+1"/>
 
  </define>
 
@@ -126,8 +126,7 @@
    <rotationref ref="rotxp90"/>
   </union>
 
-  <!-- box name="ChamberAssemblyBox" x="wextent" y="wextent" z="wextent"/ -->
-  <tube name="ChamberAssemblyCyl" rmin="0." rmax="wR" z="wH" deltaphi="TWOPI"/>
+  <box name="ChamberAssemblyBox" x="wX" y="wY" z="wZ"/>
  </solids>
 
  <structure>  
@@ -177,7 +176,7 @@
 
   <volume name="ChamberAssembly">
    <materialref ref="Air"/>
-   <solidref ref="ChamberAssemblyCyl"/>
+   <solidref ref="ChamberAssemblyBox"/>
 
    <physvol>
      <volumeref ref="ChamberBody"/>

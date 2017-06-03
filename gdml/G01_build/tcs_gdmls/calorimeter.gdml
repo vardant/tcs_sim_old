@@ -14,6 +14,7 @@
    <constant name="BLKZ" value="18."/>
 
    <constant name="eps" value="0.000001"/>
+   <!-- constant name="eps" value="1"/ -->
 
    <quantity name="blkx" type="length" value="BLKX" unit="cm"/>
    <quantity name="blkz" type="length" value="BLKZ" unit="cm"/>
@@ -93,6 +94,7 @@
      <rotationref ref="identity"/>
    </physvol> 
 
+   <auxiliary auxtype="Color" auxvalue="red"/>
   </volume>
 
  </structure>

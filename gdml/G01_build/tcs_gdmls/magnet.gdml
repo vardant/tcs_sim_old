@@ -58,8 +58,8 @@
   <position name="center" x="0" y="0" z="0"/>
   <rotation name="identity" x="0" y="0" z="0"/>
 
-  <quantity name="wZ" type="length" value="2*poleZ+gap" unit="mm"/>
-  <quantity name="wR" type="length" value="250." unit="mm"/>
+  <quantity name="wZ" type="length" value="2*poleZ+gap+1"/>
+  <quantity name="wR" type="length" value="250.05" unit="mm"/>
 
  </define>
 
