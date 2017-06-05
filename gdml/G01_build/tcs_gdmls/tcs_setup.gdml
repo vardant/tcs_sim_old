@@ -21,6 +21,7 @@
   <constant name="TRACKERX_DIST" value="54."/>
 
   <rotation name="roty90" x="0" y="90" z="0" unit="deg"/>
+  <rotation name="rotx90" x="90" y="0" z="0" unit="deg"/>
 
   <position name="beam_pipe_shift" x="0" y="0" z="287.15" unit="cm"/>
 
@@ -87,6 +88,12 @@
      <file name="tcs_gdmls/scattering_chamber.gdml"/>
      <positionref ref="center"/>
      <rotationref ref="roty90"/>
+   </physvol> 
+
+   <physvol>
+     <file name="tcs_gdmls/ln2shield.gdml"/>
+     <positionref ref="center"/>
+     <rotationref ref="rotx90"/>
    </physvol> 
 
    <physvol>
