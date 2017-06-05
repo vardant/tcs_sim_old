@@ -27,7 +27,7 @@
   <position name="center" x="0" y="0" z="0"/>
   <rotation name="identity" x="0" y="0" z="0"/>
 
-  <quantity name="wextent" type="length" value="5.0" unit="cm"/>
+  <quantity name="wextent" type="length" value="3.2" unit="cm"/>
  </define>
 
  <materials>
